@@ -139,7 +139,9 @@ public class HomePage extends AppCompatActivity {
             public void onClick(View v) {
 
                 dialog.dismiss();
-                Toast.makeText(HomePage.this,"Create a short is Clicked",Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomePage.this,"Set step goal",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), SetCalories.class);
+                startActivity(intent);
 
             }
         });

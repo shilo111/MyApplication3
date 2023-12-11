@@ -80,7 +80,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="add calories"
+            android:text="Set steps goal"
             android:textColor="@color/lavanda"
             android:layout_marginLeft="30dp"
             android:textSize="16sp"/>

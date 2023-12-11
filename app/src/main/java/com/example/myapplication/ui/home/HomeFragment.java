@@ -59,6 +59,9 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     private static final int REQUEST_SENSOR_PERMISSION = 1;
     private FragmentHomeBinding binding;
+    private TextView caloriesT;
+    private TextView GoalT;
+    private TextView DinerT;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -72,6 +75,9 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         myRef = database.getReference("users");
         auth = FirebaseAuth.getInstance();
         fireBaseHandler = new FireBaseHandler(auth, root.getContext());
+        caloriesT = root.findViewById(R.id.CaloriesT);
+        GoalT = root.findViewById(R.id.GoalT);
+        DinerT = root.findViewById(R.id.DinerT);
 
         try {
             showHomePageDesign(root);
@@ -80,18 +86,20 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         } catch (java.lang.InstantiationException e) {
             throw new RuntimeException(e);
         }
-/*
         myRef.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 Users value = dataSnapshot.getValue(Users.class);
                 if (value != null) {
-                    goalTextView.setText("Total Calories: " + value.getSteps());
+                    caloriesT.setText("" + value.getCalories());
+                    GoalT.setText("" + value.getGoalStep());
+                    goal = value.getGoalStep();
+                    updateProgressBar();
 
                 } else {
 
-                    goalTextView.setText("Total Calories: " + 0);
+                    caloriesT.setText("No data");
                 }
             }
 
@@ -101,8 +109,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());}
         });
-
- */
 
 
 
@@ -119,9 +125,9 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     private void showHomePageDesign(View view) throws IllegalAccessException, java.lang.InstantiationException {
         stepCountTextView = view.findViewById(R.id.stepCountTextView1);
-        goalTextView = view.findViewById(R.id.goalTextView);
+
         progressBar = view.findViewById(R.id.progressBar);
-        goalEditText = view.findViewById(R.id.goalEditText);
+
 
 
         Toast.makeText(view.getContext(), "Works!", Toast.LENGTH_SHORT).show();
@@ -144,14 +150,14 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
 //      Set up listener for goal input
-        goalEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                // Update goal when the user finishes entering a new goal
-                updateGoalFromEditText();
-                return true;
-           }
-         return false;
-        });
+//        goalEditText.setOnEditorActionListener((v, actionId, event) -> {
+//            if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                // Update goal when the user finishes entering a new goal
+//                updateGoalFromEditText();
+//                return true;
+//            }
+//            return false;
+//        });
 
 
         // Check for permission to use the step counter sensor
@@ -173,39 +179,13 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
 
-        String Goal = goalEditText.getText().toString();
+
 
 
 
 
     }
-    private void updateGoalFromEditText() {
-        String goalString = goalEditText.getText().toString();
 
-        if (!TextUtils.isEmpty(goalString)) {
-            goal = Integer.parseInt(goalString);
-            updateGoalTextView();
-           // int finalGoal = goal;
-            /*
-            fireBaseHandler.getUserDetails(myRef, user -> {
-
-                myRef.child(auth.getCurrentUser().getUid()).child("steps").setValue(finalGoal).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Well done!!!", Toast.LENGTH_SHORT).show();
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Please try again :(", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            });
-
-             */
-        }
-    }
 
     private void updateGoalTextView() {
         goalTextView.setText("Goal: " + goal);
@@ -251,7 +231,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         progressBar.setProgress(progress);
     }
 
-//    @Override
+    //    @Override
 //    protected void onResume() {
 //        super.onResume();
 //        registerStepCounterSensor();

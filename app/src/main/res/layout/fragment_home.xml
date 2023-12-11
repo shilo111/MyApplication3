@@ -32,17 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
-    <TextView
-        android:id="@+id/goalTextView"
-        android:layout_width="81dp"
-        android:layout_height="22dp"
-        android:text="Goal:"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.527"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+
 
     <Button
         android:id="@+id/button2"
@@ -56,30 +46,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stepCountTextView1" />
 
-    <EditText
-        android:id="@+id/goalEditText"
-        android:layout_width="127dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Enter Goal"
-        android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
-        app:layout_constraintTop_toBottomOf="@+id/stepCountTextView1" />
+
 
 
 
     <!-- res/layout/table_row_item.xml -->
     <TableLayout
-        android:layout_width="340dp"
-        android:layout_height="139dp"
+        android:layout_width="364dp"
+        android:layout_height="178dp"
         android:stretchColumns="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.331">
+        app:layout_constraintVertical_bias="0.464">
 
         <!-- Header Row -->
         <TableRow
@@ -89,13 +70,13 @@
             <TextView
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="Column 1"
+                android:text=""
                 android:textStyle="bold" />
 
             <TextView
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="Column 2"
+                android:text="stats"
                 android:textStyle="bold" />
 
             <!-- Add more TextViews for additional columns as needed -->
@@ -105,16 +86,64 @@
         <!-- Data Rows -->
         <TableRow
             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Calories" />
+
+            <TextView
+                android:id="@+id/CaloriesT"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="No data" />
+
+
+            <!-- Add more TextViews for additional columns as needed -->
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="Data 1,1" />
+                android:text="Goal Steps" />
+
+            <TextView
+                android:id="@+id/GoalT"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="tt" />
+
 
             <!-- Add more TextViews for additional columns as needed -->
 
         </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Diner" />
+
+            <TextView
+                android:id="@+id/DinerT"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="tt" />
+
+
+            <!-- Add more TextViews for additional columns as needed -->
+
+        </TableRow>
+
 
         <!-- Add more TableRow elements for additional data rows as needed -->
 
