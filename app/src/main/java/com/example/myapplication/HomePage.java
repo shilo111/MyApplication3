@@ -151,7 +151,21 @@ public class HomePage extends AppCompatActivity {
             public void onClick(View v) {
 
                 dialog.dismiss();
-                Toast.makeText(HomePage.this,"Go live is Clicked",Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomePage.this,"Share app",Toast.LENGTH_SHORT).show();
+
+                String message = "Check out this awesome app!";
+
+// Create an Intent with the action set to ACTION_SEND
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+
+// Set the type of content to text
+                shareIntent.setType("text/plain");
+
+// Put the message to be shared into the Intent
+                shareIntent.putExtra(Intent.EXTRA_TEXT, message);
+
+// Start the activity with the Intent
+                startActivity(Intent.createChooser(shareIntent, "Share via"));
 
             }
         });
