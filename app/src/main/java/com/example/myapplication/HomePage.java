@@ -54,6 +54,8 @@ public class HomePage extends AppCompatActivity {
         setContentView(binding.getRoot());
 //getRoot().getContext()
         setupHomePage(savedInstanceState, binding.fab.getContext());
+
+
     }
 
     private void setupHomePage(Bundle savedInstanceState, Context context) {

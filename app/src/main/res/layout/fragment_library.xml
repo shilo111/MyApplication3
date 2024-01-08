@@ -10,4 +10,14 @@
         android:layout_height="match_parent"
         android:text="Hello1" />
 
+    <Button
+        android:id="@+id/button_show_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Menu"
+
+        android:layout_marginTop="16dp"/>
+
+
+
 </FrameLayout>

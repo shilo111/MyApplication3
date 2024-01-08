@@ -9,8 +9,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
@@ -34,11 +39,39 @@ public class LibraryFragment extends Fragment {
         LibraryViewModel libraryViewModel =
                 new ViewModelProvider(this).get(LibraryViewModel.class);
 
+
         binding = FragmentLibraryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
 
         return root;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.your_menu_resource, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == R.id.menu_item1) {
+            // Handle item 1 click
+            return true;
+        } else if (itemId == R.id.menu_item2) {
+            // Handle item 2 click
+            return true;
+        } else {
+            // Handle other cases or call the superclass method
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -46,5 +79,7 @@ public class LibraryFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(LibraryViewModel.class);
         // TODO: Use the ViewModel
     }
+
+
 
 }
