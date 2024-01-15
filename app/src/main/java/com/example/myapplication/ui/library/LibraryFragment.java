@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,20 +15,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.databinding.FragmentDashboardBinding;
-import com.example.myapplication.databinding.FragmentHomeBinding;
 import com.example.myapplication.databinding.FragmentLibraryBinding;
-import com.example.myapplication.ui.dashboard.DashboardViewModel;
+
+import java.util.List;
 
 public class LibraryFragment extends Fragment {
 
     private LibraryViewModel mViewModel;
     private FragmentLibraryBinding binding;
+
+    private RecyclerView recyclerView;
+
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -44,6 +44,9 @@ public class LibraryFragment extends Fragment {
         View root = binding.getRoot();
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+
+
 
 
         return root;

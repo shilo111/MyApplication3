@@ -4,10 +4,15 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -39,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
+
     }
 
     public void onClick(View view) {
@@ -50,17 +58,22 @@ public class MainActivity extends AppCompatActivity {
         String password = String.valueOf(passInput.getText());
 
         f.signIn(email, password);
+
     }
 
-   @Override
-    protected void onStart() {
-        super.onStart();
-        if (auth.getCurrentUser() != null) {
-            Intent intent = new Intent(MainActivity.this, HomePage.class);
-            startActivity(intent);
-            finish();
-        }
-    }
+//   @Override
+//    protected void onStart() {
+//        super.onStart();
+//        if (auth.getCurrentUser() != null) {
+//            Intent intent = new Intent(MainActivity.this, HomePage.class);
+//            startActivity(intent);
+//            finish();
+//        }
+//    }
+
+
+
+
 
 
 }
