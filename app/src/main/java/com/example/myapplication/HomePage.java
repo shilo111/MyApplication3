@@ -52,7 +52,7 @@ public class HomePage extends AppCompatActivity {
         setContentView(R.layout.activity_home_page);
         binding = ActivityHomePageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-//getRoot().getContext()
+        //getRoot().getContext()
         setupHomePage(savedInstanceState, binding.fab.getContext());
 
 
@@ -65,20 +65,12 @@ public class HomePage extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         fab = findViewById(R.id.fab);
         drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
 
-        if(savedInstanceState == null){
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_home);
-
-        }
 
         replaceFragment(new HomeFragment());
 
