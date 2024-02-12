@@ -38,4 +38,30 @@
         android:name="com.example.myapplication.ui.settings.Setting"
         android:label="Settings"
         tools:layout="@layout/fragment_setting" />
+
+    <fragment
+        android:id="@+id/navigation_reviews"
+        android:name="com.example.myapplication.ui.reviews.Reviews"
+        android:label="Reviews"
+        tools:layout="@layout/fragment_reviews" />
+
+    <fragment
+        android:id="@+id/navigation_personal"
+        android:name="com.example.myapplication.ui.personal.Personal"
+        android:label="Personal"
+        tools:layout="@layout/fragment_personal" />
+
+    <fragment
+        android:id="@+id/navigation_notification"
+        android:name="com.example.myapplication.ui.notification.Notification"
+        android:label="Notification"
+        tools:layout="@layout/fragment_notification" />
+
+    <fragment
+        android:id="@+id/navigation_finger"
+        android:name="com.example.myapplication.ui.finger.Finger"
+        android:label="Finger"
+        tools:layout="@layout/fragment_finger" />
+
+
 </navigation>

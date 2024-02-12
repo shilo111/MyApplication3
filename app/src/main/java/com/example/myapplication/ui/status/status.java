@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.status;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -9,16 +11,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.myapplication.ExampleFragment;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentStatusBinding;
+import com.example.myapplication.ui.finger.Finger;
 import com.example.myapplication.ui.home.HomeViewModel;
 import com.example.myapplication.ui.library.LibraryViewModel;
+
+
+import com.example.myapplication.ui.notification.Notification;
+import com.example.myapplication.ui.personal.Personal;
+import com.example.myapplication.ui.reviews.Reviews;
+import com.example.myapplication.ui.settings.Setting;
 
 public class status extends Fragment {
 
@@ -45,6 +56,11 @@ public class status extends Fragment {
 
 
          Button button = root.findViewById(R.id.LogOut);
+         Button Reviews = root.findViewById(R.id.button);
+         Button Account = root.findViewById(R.id.button2);
+         Button PersonalIN = root.findViewById(R.id.button3);
+         Button Notification = root.findViewById(R.id.button4);
+         Button Finger = root.findViewById(R.id.button5);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,10 +71,75 @@ public class status extends Fragment {
             }
         });
 
+        Reviews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                Reviews fragment = new Reviews();
+                fragmentTransaction.replace(R.id.frame_layout, fragment).commit();
+
+            }
+        });
+
+        Account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                Setting fragment = new Setting();
+                fragmentTransaction.replace(R.id.frame_layout, fragment).commit();
+
+            }
+        });
+
+        PersonalIN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                Personal fragment = new Personal();
+                fragmentTransaction.replace(R.id.frame_layout, fragment).commit();
+
+            }
+        });
+
+        Notification.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                Notification fragment = new Notification();
+                fragmentTransaction.replace(R.id.frame_layout, fragment).commit();
+
+            }
+        });
+
+        Finger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                Finger fragment = new Finger();
+                fragmentTransaction.replace(R.id.frame_layout, fragment).commit();
+
+            }
+        });
+
+
+
 
 
         return root;
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
