@@ -166,16 +166,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
 
-        Button button = (Button) view.findViewById(R.id.button2);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                progress = 0;
-                stepCount = 0;
-                setStepCount(stepCount);
-                stepCountTextView.setText("Step Count: " + stepCount);
-                progressBar.setProgress(progress);
-            }
-        });
+
 
 
 

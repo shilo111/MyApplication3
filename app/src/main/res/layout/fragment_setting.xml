@@ -5,10 +5,39 @@
     android:layout_height="match_parent"
     tools:context=".ui.settings.Setting">
 
-    <TextView
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="50dp"
-        android:text="Hello" />
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/current_password_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Current Password"
+            android:inputType="textPassword"
+            android:layout_marginHorizontal="16dp"/>
+
+        <EditText
+            android:id="@+id/new_password_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/current_password_edittext"
+            android:layout_marginTop="16dp"
+            android:hint="New Password"
+            android:inputType="textPassword"
+            android:layout_marginHorizontal="16dp"/>
+
+        <Button
+            android:id="@+id/update_password_button"
+            android:onClick="updatePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/new_password_edittext"
+            android:layout_marginTop="24dp"
+            android:text="Update Password"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
 
 </FrameLayout>
