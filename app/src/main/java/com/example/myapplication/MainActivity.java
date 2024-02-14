@@ -24,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FireBaseHandler f;
 
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -61,15 +64,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-   @Override
-    protected void onStart() {
-        super.onStart();
-        if (auth.getCurrentUser() != null) {
-            Intent intent = new Intent(MainActivity.this, HomePage.class);
-            startActivity(intent);
-            finish();
-        }
-    }
+//   @Override
+////    protected void onStart() {
+////        super.onStart();
+////        if (auth.getCurrentUser() != null) {
+////            Intent intent = new Intent(MainActivity.this, HomePage.class);
+////            startActivity(intent);
+////            finish();
+////        }
+////    }
 
 
 

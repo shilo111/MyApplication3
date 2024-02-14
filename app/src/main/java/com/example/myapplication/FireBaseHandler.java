@@ -41,9 +41,19 @@ public class FireBaseHandler {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
 
-                    Toast.makeText(context, "sign in successfully!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context.getApplicationContext(), HomePage.class);
-                    context.startActivity(intent);
+                    if (!MyPreferences.hasUserEverLoggedIn(context.getApplicationContext())) {
+                        Toast.makeText(context, "sign in successfully!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context.getApplicationContext(), FirstTime.class);
+                        context.startActivity(intent);
+                        MyPreferences.setUserLoggedIn(context.getApplicationContext());
+
+
+                    } else {
+                        Toast.makeText(context, "sign in successfully!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context.getApplicationContext(), HomePage.class);
+                        context.startActivity(intent);
+                    }
+
 
 
                 }

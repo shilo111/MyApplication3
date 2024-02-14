@@ -48,6 +48,10 @@ public class Setting extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
 
+
+        currentPasswordEditText = root.findViewById(R.id.current_password_edittext);
+        newPasswordEditText = root.findViewById(R.id.new_password_edittext);
+
         // Find views and set up UI listeners
         // e.g., EditText fields for current password and new password,
         // and a button to trigger the password update
