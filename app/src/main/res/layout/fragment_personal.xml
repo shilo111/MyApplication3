@@ -6,44 +6,141 @@
     android:layout_height="match_parent"
     tools:context=".ui.personal.Personal">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        android:id="@+id/infro"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="16dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="103dp">
 
         <EditText
-            android:id="@+id/nameEditText"
-            android:layout_width="match_parent"
+            android:id="@+id/heightEditText"
+            android:layout_width="319dp"
             android:layout_height="wrap_content"
-            android:hint="Name"
-            android:inputType="text" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="127dp"
+            android:layout_marginEnd="36dp"
+            android:hint="Hight"
+            android:inputType="number" />
 
         <EditText
-            android:id="@+id/emailEditText"
-            android:layout_width="match_parent"
+            android:id="@+id/bodyFatEditText"
+            android:layout_width="319dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/nameEditText"
-            android:layout_marginTop="16dp"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
+            android:layout_alignBottom="@+id/bmiEditText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="66dp"
+            android:layout_marginEnd="63dp"
+            android:layout_marginBottom="-86dp"
+            android:hint="BodyFat"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/bmiEditText"
+            android:layout_width="319dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/ageEditText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="58dp"
+            android:layout_marginEnd="57dp"
+            android:layout_marginBottom="-78dp"
+            android:hint="Bmi"
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/ageEditText"
-            android:layout_width="match_parent"
+            android:layout_width="319dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/emailEditText"
-            android:layout_marginTop="16dp"
+            android:layout_alignBottom="@+id/weightEditText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="58dp"
+            android:layout_marginEnd="57dp"
+            android:layout_marginBottom="-84dp"
             android:hint="Age"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/weightEditText"
+            android:layout_width="319dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/heightEditText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="44dp"
+            android:layout_marginEnd="59dp"
+            android:hint="Weight"
             android:inputType="number" />
 
         <Button
             android:id="@+id/saveButton"
+            android:layout_width="105dp"
+            android:layout_height="44dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="145dp"
+            android:layout_marginEnd="143dp"
+            android:layout_marginBottom="121dp"
+            android:text="Save" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="349dp"
+            android:layout_height="55dp"
+            android:layout_alignBottom="@+id/heightEditText"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="72dp"
+            android:text="Personal infromation"
+            android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/height"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ageEditText"
-            android:layout_marginTop="16dp"
-            android:layout_centerHorizontal="true"
-            android:text="Save" />
+            android:layout_alignBottom="@+id/heightEditText"
+            android:layout_marginBottom="48dp"
+            android:text="height" />
+
+        <TextView
+            android:id="@+id/weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weightEditText"
+            android:layout_marginBottom="50dp"
+            android:text="weight" />
+
+        <TextView
+            android:id="@+id/age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/ageEditText"
+            android:layout_marginBottom="52dp"
+            android:text="age" />
+
+        <TextView
+            android:id="@+id/bmi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/bmiEditText"
+            android:layout_marginBottom="47dp"
+            android:text="bmi" />
+
+        <TextView
+            android:id="@+id/bodyFat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/bodyFatEditText"
+            android:layout_marginBottom="51dp"
+            android:text="bodyFat" />
 
     </RelativeLayout>
 

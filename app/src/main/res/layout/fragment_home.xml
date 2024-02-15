@@ -107,7 +107,7 @@
                 android:id="@+id/GoalT"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="tt" />
+                android:text="No data" />
 
 
             <!-- Add more TextViews for additional columns as needed -->
@@ -127,7 +127,7 @@
                 android:id="@+id/DinerT"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="tt" />
+                android:text="No data" />
 
 
             <!-- Add more TextViews for additional columns as needed -->

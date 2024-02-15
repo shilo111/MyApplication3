@@ -12,24 +12,35 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.myapplication.FireBaseHandler;
+import com.example.myapplication.PersonalData;
 import com.example.myapplication.R;
 import com.example.myapplication.User;
+import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentPersonalBinding;
 import com.example.myapplication.databinding.FragmentSettingBinding;
 import com.example.myapplication.ui.settings.SettingViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Personal extends Fragment {
     private FragmentPersonalBinding binding;
     private PersonalViewModel mViewModel;
 
+    private DatabaseReference myRef;
+    private FirebaseDatabase database;
+    private FirebaseAuth auth;
 
-    private EditText nameEditText, emailEditText, ageEditText;
-    private Button saveButton;
+
+    EditText heightEditText,weightEditText,ageEditText,bmiEditText,bodyFatEditText;
+
+    private Button button;
     private DatabaseReference databaseReference;
     public static Personal newInstance() {
         return new Personal();
@@ -45,17 +56,48 @@ public class Personal extends Fragment {
         View root = binding.getRoot();
 
 
-        nameEditText = root.findViewById(R.id.nameEditText);
-        emailEditText = root.findViewById(R.id.emailEditText);
+        heightEditText = root.findViewById(R.id.heightEditText);
+        weightEditText = root.findViewById(R.id.weightEditText);
         ageEditText = root.findViewById(R.id.ageEditText);
-        saveButton = root.findViewById(R.id.saveButton);
+        bmiEditText = root.findViewById(R.id.bmiEditText);
+        bodyFatEditText = root.findViewById(R.id.bodyFatEditText);
+        button = root.findViewById(R.id.saveButton);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
+        auth = FirebaseAuth.getInstance();
+
+        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                PersonalData value = dataSnapshot.getValue(PersonalData.class);
+
+                    heightEditText.setText(("" + value.getHeight()));
+                    weightEditText.setText(("" + value.getWeight()));
+                    ageEditText.setText(("" + value.getAge()));
+                    bmiEditText.setText(("" + value.getBmi()));
+                    bodyFatEditText.setText(("" + value.getBodyFat()));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveUserInfo();
+                double height = Double.parseDouble(heightEditText.getText().toString());
+                int weight = Integer.parseInt(weightEditText.getText().toString());
+                double age = Double.parseDouble(ageEditText.getText().toString());
+                int bmi = Integer.parseInt(bmiEditText.getText().toString());
+                int bodeFat = Integer.parseInt(bodyFatEditText.getText().toString());
+
+                calculateBMI();
             }
         });
 
@@ -64,29 +106,42 @@ public class Personal extends Fragment {
 
         return root;
     }
+    private void calculateBMI() {
 
 
-    private void saveUserInfo() {
-        String name = nameEditText.getText().toString().trim();
-        String email = emailEditText.getText().toString().trim();
-        int age = Integer.parseInt(ageEditText.getText().toString().trim());
+        double age = Double.parseDouble(ageEditText.getText().toString());
 
-        User user = new User(name, email, age);
+        int bodeFat = Integer.parseInt(bodyFatEditText.getText().toString());
 
-        databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getContext(), "User information saved successfully", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to save user information: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+
+        // Get weight and height from EditText
+        String weightStr = weightEditText.getText().toString();
+        String heightStr = heightEditText.getText().toString();
+
+        float height = 0;
+        float weight = 0;
+        float bmi = 0;
+        if (!weightStr.isEmpty() && !heightStr.isEmpty()) {
+            // Convert string values to float
+            weight = Float.parseFloat(weightStr);
+            height = Float.parseFloat(heightStr) / 100;
+
+            // Calculate BMI
+            bmi = weight / (height * height);
+
+            // Display BMI in the BMI EditText
+            bmiEditText.setText(String.format("%.2f", bmi));
+            height = Float.parseFloat(heightEditText.getText().toString());
+
+        } else {
+            // Clear BMI EditText if weight or height is empty
+            bmiEditText.setText("");
+        }
+
+        FireBaseHandler.setNewData((double) height, (int) weight, (int) bmi, bodeFat, age);
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

@@ -24,8 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class FireBaseHandler {
-    private static FirebaseDatabase database;
-    private static DatabaseReference myRef;
+    private static FirebaseDatabase database =  FirebaseDatabase.getInstance();
+    private static DatabaseReference myRef = database.getReference();
 
     private static FirebaseAuth auth;
     private static Context context;
@@ -36,7 +36,9 @@ public class FireBaseHandler {
     {
         this.auth = auth;
         this.context = context;
+
     }
+
 
     public void signIn(String email, String password)
     {
@@ -110,68 +112,71 @@ public class FireBaseHandler {
 
     public static void newUser()
     {
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
-        auth = FirebaseAuth.getInstance();
-
-        myRef.child("dataUser").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    for(DataSnapshot snapshot : task.getResult().getChildren())
-                    {
-                        if(snapshot.child(auth.getCurrentUser().getUid()).exists())
-                        {
-                            Intent intent = new Intent(context.getApplicationContext(), HomePage.class);
-                            context.startActivity(intent);
-                        }
-                        else {
-                            Intent intent = new Intent(context.getApplicationContext(), FirstTime.class);
-                            context.startActivity(intent);
-                        }
-                    }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Child exists
+                    Intent intent = new Intent(context.getApplicationContext(), HomePage.class);
+                    context.startActivity(intent);
+                } else {
+                    // Child does not exist
+                    Intent intent = new Intent(context.getApplicationContext(), FirstTime.class);
+                    context.startActivity(intent);
                 }
             }
-        });
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors
+                Log.e("TAG", "Error: " + databaseError.getMessage());
+            }
+        });
 
     }
 
+
+
     public static void setNewData(double height,int weight,int bmi, int bodyFat, double age){
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference();
-        auth = FirebaseAuth.getInstance();
 
-        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).setValue(height).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+
+
+        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).child("height").setValue(height).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
             }
         });
-        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).setValue(weight).addOnCompleteListener(new OnCompleteListener<Void>() {
+        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).child("weight").setValue(weight).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
             }
         });
-        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).setValue(bmi).addOnCompleteListener(new OnCompleteListener<Void>() {
+        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).child("bmi").setValue(bmi).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
             }
         });
-        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).setValue(bodyFat).addOnCompleteListener(new OnCompleteListener<Void>() {
+        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).child("bodyFat").setValue(bodyFat).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
             }
         });
-        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).setValue(age).addOnCompleteListener(new OnCompleteListener<Void>() {
+        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).child("age").setValue(age).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
             }
         });
+
+
+        Toast.makeText(context, "You can see your bmi jest go to settings and personal!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(context.getApplicationContext(), HomePage.class);
+        context.startActivity(intent);
 
     }
 }

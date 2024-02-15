@@ -12,61 +12,83 @@
         android:layout_height="match_parent"
         android:padding="16dp"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-30dp">
+        tools:layout_editor_absoluteY="103dp">
 
         <EditText
             android:id="@+id/heightEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Hight"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/weightEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/nameEditText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:hint="Weight"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/ageEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/emailEditText"
-            android:layout_marginTop="15dp"
-            android:hint="Age"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/bmiEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ageEditText"
-            android:layout_marginTop="13dp"
-            android:hint="Bmi"
+            android:layout_marginEnd="16dp"
+            android:hint="Hight"
             android:inputType="number" />
 
         <EditText
             android:id="@+id/bodyFatEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/bmiEditText"
-            android:layout_marginTop="16dp"
+            android:layout_alignBottom="@+id/bmiEditText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="-62dp"
             android:hint="BodyFat"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/bmiEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/ageEditText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="-58dp"
+            android:hint="Bmi"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/ageEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weightEditText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="-68dp"
+            android:hint="Age"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/weightEditText"
+            android:layout_width="359dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/heightEditText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginEnd="18dp"
+            android:hint="Weight"
             android:inputType="number" />
 
         <Button
             android:id="@+id/saveButton"
             android:layout_width="105dp"
             android:layout_height="44dp"
-            android:layout_below="@+id/bodyFatEditText"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="159dp"
-            android:layout_marginTop="38dp"
-            android:layout_marginEnd="131dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="46dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="316dp"
             android:text="Save" />
 
     </RelativeLayout>

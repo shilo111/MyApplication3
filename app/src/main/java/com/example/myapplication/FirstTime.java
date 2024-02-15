@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 public class FirstTime extends AppCompatActivity {
 EditText heightEditText,weightEditText,ageEditText,bmiEditText,bodyFatEditText;
@@ -16,35 +18,66 @@ Button button;
         setContentView(R.layout.activity_first_time);
 
 
-       heightEditText = findViewById(R.id.heightEditText);
+        // Attach text watchers
+//        weightEditText.addTextChangedListener(textWatcher);
+//        heightEditText.addTextChangedListener(textWatcher);
+
+
+        heightEditText = findViewById(R.id.heightEditText);
         weightEditText = findViewById(R.id.weightEditText);
         ageEditText = findViewById(R.id.ageEditText);
         bmiEditText = findViewById(R.id.bmiEditText);
         bodyFatEditText = findViewById(R.id.bodyFatEditText);
-button = findViewById(R.id.saveButton);
+        button = findViewById(R.id.saveButton);
 
-button.setOnClickListener(new View.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() {
 
 
-    @Override
-    public void onClick(View view) {
-        double height = Double.parseDouble(heightEditText.getText().toString());
-        int weight = Integer.parseInt(weightEditText.getText().toString());
+            @Override
+            public void onClick(View view) {
+
+
+                calculateBMI();
+
+
+            }
+        });
+
+
+    }
+
+   private void calculateBMI() {
+
+
         double age = Double.parseDouble(ageEditText.getText().toString());
-        int bmi = Integer.parseInt(bmiEditText.getText().toString());
+
         int bodeFat = Integer.parseInt(bodyFatEditText.getText().toString());
 
-        FireBaseHandler.setNewData(height,weight,bmi,bodeFat,age);
 
+        // Get weight and height from EditText
+        String weightStr = weightEditText.getText().toString();
+        String heightStr = heightEditText.getText().toString();
+
+        float height = 0;
+        float weight = 0;
+        float bmi = 0;
+        if (!weightStr.isEmpty() && !heightStr.isEmpty()) {
+            // Convert string values to float
+            weight = Float.parseFloat(weightStr);
+            height = Float.parseFloat(heightStr) / 100;
+
+            // Calculate BMI
+            bmi = weight / (height * height);
+
+            // Display BMI in the BMI EditText
+            bmiEditText.setText(String.format("%.2f", bmi));
+            height = Float.parseFloat(heightEditText.getText().toString());
+
+        } else {
+            // Clear BMI EditText if weight or height is empty
+            bmiEditText.setText("");
+        }
+
+        FireBaseHandler.setNewData((double) height, (int) weight, (int) bmi, bodeFat, age);
     }
-});
-
-
-
-
-
-
-    }
-
-
 }
