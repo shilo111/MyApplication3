@@ -63,5 +63,17 @@
         android:label="Finger"
         tools:layout="@layout/fragment_finger" />
 
+    <fragment
+        android:id="@+id/navigation_sport"
+        android:name="com.example.myapplication.ui.library.sport.Sport"
+        android:label="Sport"
+        tools:layout="@layout/fragment_sport" />
+
+    <fragment
+        android:id="@+id/navigation_food"
+        android:name="com.example.myapplication.ui.library.food.Food"
+        android:label="Food"
+        tools:layout="@layout/fragment_food" />
+
 
 </navigation>

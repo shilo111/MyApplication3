@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.library.food.Food">
+
+
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="250sp"
+                android:id="@+id/webView"/>
+
+            <WebView
+                android:id="@+id/webView2"
+                android:layout_width="match_parent"
+                android:layout_height="250sp" />
+
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="250sp"
+                android:id="@+id/webView3"/>
+
+            <WebView
+                android:id="@+id/webView4"
+                android:layout_width="match_parent"
+                android:layout_height="250sp" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_x="227dp"
+                android:layout_y="174dp"
+                android:text="." />
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_x="227dp"
+                android:layout_y="174dp"
+                android:text="." />
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_x="227dp"
+                android:layout_y="174dp"
+                android:text="." />
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

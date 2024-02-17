@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.myapplication.ExampleFragment;
 import com.example.myapplication.MainActivity;
@@ -30,12 +31,14 @@ import com.example.myapplication.ui.notification.Notification;
 import com.example.myapplication.ui.personal.Personal;
 import com.example.myapplication.ui.reviews.Reviews;
 import com.example.myapplication.ui.settings.Setting;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class status extends Fragment {
 
     private StatusViewModel mViewModel;
     private FragmentStatusBinding binding;
-
+    private TextView emailTextView;
 
     public static status newInstance() {
         return new status();
@@ -53,6 +56,16 @@ public class status extends Fragment {
         View root = binding.getRoot();
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        emailTextView = root.findViewById(R.id.emailTextView);
+
+        // Get current user
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String email = user.getEmail();
+            // Set email to TextView
+            emailTextView.setText(email);
+        }
 
 
          Button button = root.findViewById(R.id.LogOut);

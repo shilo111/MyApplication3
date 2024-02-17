@@ -37,11 +37,13 @@ android {
 
 dependencies {
     // Import the BoM for the Firebase platform
+    implementation ("com.google.firebase:firebase-firestore:23.0.3")
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation ("androidx.biometric:biometric:1.0.1")
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-database")
+     // or the latest version
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
@@ -53,6 +55,7 @@ dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
 
 
 

@@ -4,15 +4,18 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import com.example.myapplication.databinding.ActivityHomePageBinding;
 import com.example.myapplication.ui.dashboard.DashboardFragment;
 import com.example.myapplication.ui.home.HomeFragment;
 import com.example.myapplication.ui.library.LibraryFragment;
+import com.example.myapplication.ui.library.sport.Sport;
 import com.example.myapplication.ui.status.status;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -23,6 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +39,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.ByteArrayOutputStream;
+import java.util.UUID;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 
 public class HomePage extends AppCompatActivity {
 
@@ -46,6 +60,12 @@ public class HomePage extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private static final int CAMERA_REQUEST = 1888;
 
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private FirebaseFirestore db;
+    private StorageReference storageRef;
+    private FirebaseAuth auth;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +75,12 @@ public class HomePage extends AppCompatActivity {
         //getRoot().getContext()
         setupHomePage(savedInstanceState, binding.fab.getContext());
 
+        db = FirebaseFirestore.getInstance();
 
+        // Initialize Firebase Storage
+        storageRef = FirebaseStorage.getInstance().getReference();
+
+        // Method to capture photo and upload to Firebase Storage
 
 
 
@@ -83,7 +108,7 @@ public class HomePage extends AppCompatActivity {
             } else if (itemId == R.id.navigation_dashboard) {
                 replaceFragment(new DashboardFragment());
             } else if (itemId == R.id.navigation_library) {
-                replaceFragment(new LibraryFragment());
+                replaceFragment(new Sport());
             } else if (itemId == R.id.navigation_status) {
                 replaceFragment(new status());
             }
@@ -120,16 +145,26 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                dialog.dismiss();
-                Toast.makeText(HomePage.this,"Upload a Video is clicked",Toast.LENGTH_SHORT).show();
-                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                 }
-
-                Intent  intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                startActivity(intent);
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         shortsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,6 +219,60 @@ public class HomePage extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap photoBitmap = (Bitmap) extras.get("data");
+
+            // Convert Bitmap to byte array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            photoBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] photoByteArray = baos.toByteArray();
+
+            // Upload photo to Firebase Storage
+            uploadPhoto(photoByteArray);
+        }
+    }
+
+    private void uploadPhoto(byte[] photoByteArray) {
+        // Create a reference to the location where you want to upload the photo
+        auth = FirebaseAuth.getInstance();
+        final String randomKey = UUID.randomUUID().toString();
+        StorageReference photoRef = storageRef.child(auth.getCurrentUser().getUid() +"/"+ randomKey);
+
+        // Upload the photo
+        UploadTask uploadTask = photoRef.putBytes(photoByteArray);
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            // Photo uploaded successfully
+            // Get the download URL of the uploaded photo
+            photoRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                String photoUrl = uri.toString();
+                // Save photo URL and description to Firebase Firestore
+
+                savePhotoData(photoUrl, "Description of the photo");
+            });
+        }).addOnFailureListener(exception -> {
+            // Handle any errors that occur during the upload
+            Toast.makeText(HomePage.this, "Upload failed: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void savePhotoData(String photoUrl, String description) {
+        // Create a new document in the "photos" collection with auto-generated ID
+        db.collection("photos")
+                .add(new Photo(photoUrl, description))
+                .addOnSuccessListener(documentReference -> {
+                    // DocumentSnapshot added with ID: documentReference.getId()
+                    Toast.makeText(HomePage.this, "Photo uploaded successfully!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle errors
+                    Toast.makeText(HomePage.this, "Failed to upload photo data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
 

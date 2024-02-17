@@ -3,12 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.status.status">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.status.status"
+    app:menu="@menu/your_menu_resource">
 
 
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 
-
-
+<!--    <WebView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="250sp"-->
+<!--        android:id="@+id/webView"/>-->
 
 
 

@@ -56,56 +56,56 @@ public class Setting extends Fragment {
         // e.g., EditText fields for current password and new password,
         // and a button to trigger the password update
         Button updatePasswordButton = root.findViewById(R.id.update_password_button);
-//        updatePasswordButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                updatePassword();
-//            }
-//        });
+        updatePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updatePassword();
+            }
+        });
 
         return root;
     }
 
 
-//    private void updatePassword() {
-//        FirebaseUser user = mAuth.getCurrentUser();
-//        if (user != null) {
-//            // Get current password and new password from EditText fields
-//
-//            String currentPassword = currentPasswordEditText.getText().toString();
-//            String newPassword = newPasswordEditText.getText().toString();
-//
-//            // Reauthenticate the user with their current password
-//            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
-//            user.reauthenticate(credential)
-//                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-//
-//
-//                        @Override
-//                        public void onComplete(@NonNull Task<Void> task) {
-//                            if (task.isSuccessful()) {
-//                                // Update password
-//                                user.updatePassword(newPassword)
-//                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                            @Override
-//                                            public void onComplete(@NonNull Task<Void> task) {
-//                                                if (task.isSuccessful()) {
-//                                                    // Password updated successfully
-//                                                    Toast.makeText(getContext(), "Password updated successfully", Toast.LENGTH_SHORT).show();
-//                                                } else {
-//                                                    // Password update failed
-//                                                    Toast.makeText(getContext(), "Failed to update password", Toast.LENGTH_SHORT).show();
-//                                                }
-//                                            }
-//                                        });
-//                            } else {
-//                                // Reauthentication failed
-//                                Toast.makeText(getContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//        }
-//    }
+    private void updatePassword() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            // Get current password and new password from EditText fields
+
+            String currentPassword = currentPasswordEditText.getText().toString();
+            String newPassword = newPasswordEditText.getText().toString();
+
+            // Reauthenticate the user with their current password
+            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
+            user.reauthenticate(credential)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                // Update password
+                                user.updatePassword(newPassword)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    // Password updated successfully
+                                                    Toast.makeText(getContext(), "Password updated successfully", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    // Password update failed
+                                                    Toast.makeText(getContext(), "Failed to update password", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            } else {
+                                // Reauthentication failed
+                                Toast.makeText(getContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
