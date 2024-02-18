@@ -145,10 +145,13 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                }
+                Intent intent = new Intent(HomePage.this, UploadActivity.class);
+                startActivity(intent);
+
+//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//                }
             }
         });
 
@@ -242,7 +245,7 @@ public class HomePage extends AppCompatActivity {
         // Create a reference to the location where you want to upload the photo
         auth = FirebaseAuth.getInstance();
         final String randomKey = UUID.randomUUID().toString();
-        StorageReference photoRef = storageRef.child(auth.getCurrentUser().getUid() +"/"+ randomKey);
+        StorageReference photoRef = storageRef.child(auth.getCurrentUser().getUid() +"images/"+ randomKey);
 
         // Upload the photo
         UploadTask uploadTask = photoRef.putBytes(photoByteArray);
@@ -254,7 +257,11 @@ public class HomePage extends AppCompatActivity {
                 // Save photo URL and description to Firebase Firestore
 
                 savePhotoData(photoUrl, "Description of the photo");
-            });
+
+                runOnUiThread(() -> {
+                    Toast.makeText(HomePage.this, "Photo uploaded successfully!", Toast.LENGTH_SHORT).show();
+                });
+                });
         }).addOnFailureListener(exception -> {
             // Handle any errors that occur during the upload
             Toast.makeText(HomePage.this, "Upload failed: " + exception.getMessage(), Toast.LENGTH_SHORT).show();

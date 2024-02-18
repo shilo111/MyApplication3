@@ -40,11 +40,14 @@ dependencies {
     implementation ("com.google.firebase:firebase-firestore:23.0.3")
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation ("androidx.biometric:biometric:1.0.1")
+    implementation ("com.squareup.picasso:picasso:2.71828") // or the latest version
+
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-database")
      // or the latest version
-
+    implementation ("com.github.bumptech.glide:glide:4.14.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.14.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
@@ -56,6 +59,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("com.google.firebase:firebase-storage:20.3.0")
+    implementation("androidx.activity:activity:1.8.0")
 
 
 
