@@ -22,6 +22,7 @@ import com.example.myapplication.ui.dashboard.DashboardFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -35,8 +36,9 @@ public class UploadActivity extends AppCompatActivity {
     private ImageView uploadImage;
     EditText uploadCaption;
     ProgressBar progressBar;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();;
     private Uri imageUri;
-    final  private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Images");
+    final  private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Images/" + auth.getCurrentUser().getUid());
     final private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,7 @@ public class UploadActivity extends AppCompatActivity {
     }
     //Outside onCreate
     private void uploadToFirebase(Uri uri){
+
         String caption = uploadCaption.getText().toString();
         final StorageReference imageReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
         imageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -97,7 +100,7 @@ public class UploadActivity extends AppCompatActivity {
                         databaseReference.child(key).setValue(dataClass);
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(UploadActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(UploadActivity.this, DashboardFragment.class);
+                        Intent intent = new Intent(UploadActivity.this, UploadActivity.class);
                         startActivity(intent);
                         finish();
                     }

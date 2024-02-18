@@ -74,9 +74,7 @@ public class DashboardFragment extends Fragment {
 
         try {
             showHomePageDesign(root);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (java.lang.InstantiationException e) {
+        } catch (IllegalAccessException | java.lang.InstantiationException e) {
             throw new RuntimeException(e);
         }
 

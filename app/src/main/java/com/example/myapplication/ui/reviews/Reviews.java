@@ -21,6 +21,7 @@ import com.example.myapplication.Photo;
 import com.example.myapplication.R;
 import com.example.myapplication.UploadActivity;
 import com.example.myapplication.databinding.FragmentFoodBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -48,9 +49,10 @@ public class Reviews extends Fragment {
     private FragmentFoodBinding binding;
     FloatingActionButton fab;
     private RecyclerView recyclerView;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();;
     private ArrayList<DataClass> dataList;
     private MyAdapter adapter;
-    final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Images");
+    final private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Images/" + auth.getCurrentUser().getUid());
 
     public static Reviews newInstance() {
         return new Reviews();

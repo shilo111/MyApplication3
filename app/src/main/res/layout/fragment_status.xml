@@ -162,7 +162,7 @@
                         android:drawableStart="@drawable/ic_5"
                         android:drawablePadding="20dp"
                         android:paddingStart="20dp"
-                        android:text="Fingerprint Settings"
+                        android:text="Your stats"
                         android:textAlignment="viewStart"
                         android:textSize="18sp"
                         android:textStyle="bold" />

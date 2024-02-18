@@ -143,38 +143,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             registerStepCounterSensor();
         }
 
-
-
-
-
-
-
-//      Set up listener for goal input
-//        goalEditText.setOnEditorActionListener((v, actionId, event) -> {
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                // Update goal when the user finishes entering a new goal
-//                updateGoalFromEditText();
-//                return true;
-//            }
-//            return false;
-//        });
-
-
-        // Check for permission to use the step counter sensor
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
 
