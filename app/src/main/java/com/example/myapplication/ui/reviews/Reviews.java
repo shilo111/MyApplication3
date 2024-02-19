@@ -21,6 +21,7 @@ import com.example.myapplication.Photo;
 import com.example.myapplication.R;
 import com.example.myapplication.UploadActivity;
 import com.example.myapplication.databinding.FragmentFoodBinding;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -35,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,7 +46,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
-public class Reviews extends Fragment {
+public class Reviews extends Fragment implements MyAdapter.OnItemClickListener {
 
     private ReviewsViewModel mViewModel;
     private FragmentFoodBinding binding;
@@ -93,7 +96,7 @@ public class Reviews extends Fragment {
             }
         });
 
-
+        adapter.setOnItemClickListener(this);
 
         return root;
 
@@ -107,6 +110,17 @@ public class Reviews extends Fragment {
     }
 
 
-
-
+    @Override
+    public void onItemClick(int position) {
+        DataClass itemToDelete = dataList.get(position);
+        String itemId = itemToDelete.getId(); // Assuming you have some identifier for each item
+        // Remove the item from the database
+        databaseReference.child(itemId).removeValue().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e("ERROR", e.getMessage());
+            }
+        });
+    }
 }

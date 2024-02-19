@@ -2,8 +2,13 @@ package com.example.myapplication;
 
 public class DataClass {
     private String imageURL, caption;
+    private String id;
     public DataClass(){
     }
+    public String getId() {
+        return id;
+    }
+
     public String getImageURL() {
         return imageURL;
     }
