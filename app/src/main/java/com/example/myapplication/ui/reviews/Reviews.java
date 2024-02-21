@@ -114,13 +114,11 @@ public class Reviews extends Fragment implements MyAdapter.OnItemClickListener {
     public void onItemClick(int position) {
         DataClass itemToDelete = dataList.get(position);
         String itemId = itemToDelete.getId(); // Assuming you have some identifier for each item
-        // Remove the item from the database
-        databaseReference.child(itemId).removeValue().addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("ERROR", e.getMessage());
-            }
-        });
+        if (itemId != null) {
+            // Remove the item from the database
+            databaseReference.child(itemId).removeValue();
+        } else {
+            Log.e("ReviewsFragment", "Item ID is null");
+        }
     }
 }
