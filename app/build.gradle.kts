@@ -60,6 +60,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("androidx.activity:activity:1.8.0")
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
 
 
