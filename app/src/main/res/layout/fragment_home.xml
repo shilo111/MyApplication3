@@ -6,31 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:max="100"
-        app:layout_constraintBottom_toTopOf="@+id/stepCountTextView1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    
-
-
-    <TextView
-        android:id="@+id/stepCountTextView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Step Count: 0"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
 
 
@@ -38,106 +13,271 @@
 
 
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.MainActivity"
+        android:background="#D4E4F8">
 
 
-    <!-- res/layout/table_row_item.xml -->
-    <TableLayout
-        android:layout_width="364dp"
-        android:layout_height="178dp"
-        android:stretchColumns="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.464">
-
-        <!-- Header Row -->
-        <TableRow
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
 
             <TextView
-                android:gravity="center"
-                android:padding="8dp"
-                android:text=""
-                android:textStyle="bold" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="z"
+                android:textSize="30dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-thin"/>
 
             <TextView
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="stats"
-                android:textStyle="bold" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="fit"
+                android:textSize="30dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:textColor="#000"
+                android:textStyle="bold"
+                android:fontFamily="cursive"/>
 
-            <!-- Add more TextViews for additional columns as needed -->
+        </LinearLayout>
 
-        </TableRow>
 
-        <!-- Data Rows -->
-        <TableRow
+        <androidx.cardview.widget.CardView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            app:cardElevation="6dp"
+            app:cardUseCompatPadding="true"
+            android:innerRadius="0dp"
+            android:shape="ring"
+            app:cardCornerRadius="110dp"
+            app:cardBackgroundColor="#FFFFFF"
+            android:layout_gravity="center">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/run"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="30dp"
+                    android:textColor="#3D6CFC"
+                    android:id="@+id/stepCountTextView1"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Steps Count" />
+
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Calories" />
-
-            <TextView
-                android:id="@+id/CaloriesT"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="No data" />
+            android:layout_height="wrap_content"
+            app:cardElevation="10dp"
+            app:cardUseCompatPadding="true"
+            app:cardCornerRadius="10dp">
 
 
-            <!-- Add more TextViews for additional columns as needed -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:layout_gravity="center">
 
-        </TableRow>
 
-        <TableRow
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="25dp"
+                    android:textColor="#3D6CFC"
+                    android:drawableLeft="@drawable/calories"
+                    android:drawablePadding="10dp"
+                    android:id="@+id/TV_CALORIES"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Today's Burnt Calories"
+                    android:layout_marginLeft="45dp"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:cardElevation="10dp"
+            app:cardUseCompatPadding="true"
+            app:cardCornerRadius="10dp">
 
-            <TextView
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Goal Steps" />
-
-            <TextView
-                android:id="@+id/GoalT"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="No data" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
 
 
-            <!-- Add more TextViews for additional columns as needed -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="25dp"
+                    android:textColor="#3D6CFC"
+                    android:drawableLeft="@drawable/distance"
+                    android:drawablePadding="10dp"
+                    android:id="@+id/TV_DISTANCE"
+                    />
 
-        </TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Today's Distance Covered"
+                    android:layout_marginLeft="45dp"/>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Diner" />
-
-            <TextView
-                android:id="@+id/DinerT"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="No data" />
-
-
-            <!-- Add more TextViews for additional columns as needed -->
-
-        </TableRow>
+            </LinearLayout>
 
 
-        <!-- Add more TableRow elements for additional data rows as needed -->
+        </androidx.cardview.widget.CardView>
 
-    </TableLayout>
+
+    </LinearLayout>
+
+
+
+
+
+
+
+    <!--    &lt;!&ndash; res/layout/table_row_item.xml &ndash;&gt;-->
+    <!--    <TableLayout-->
+    <!--        android:layout_width="364dp"-->
+    <!--        android:layout_height="178dp"-->
+    <!--        android:stretchColumns="1"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.492"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.464">-->
+
+    <!--        &lt;!&ndash; Header Row &ndash;&gt;-->
+    <!--        <TableRow-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content">-->
+
+    <!--            <TextView-->
+    <!--                android:gravity="center"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:text=""-->
+    <!--                android:textStyle="bold" />-->
+
+    <!--            <TextView-->
+    <!--                android:gravity="center"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:text="stats"-->
+    <!--                android:textStyle="bold" />-->
+
+    <!--            &lt;!&ndash; Add more TextViews for additional columns as needed &ndash;&gt;-->
+
+    <!--        </TableRow>-->
+
+    <!--        &lt;!&ndash; Data Rows &ndash;&gt;-->
+    <!--        <TableRow-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent">-->
+
+    <!--            <TextView-->
+    <!--                android:gravity="center"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:text="Calories" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/CaloriesT"-->
+    <!--                android:gravity="center"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:text="No data" />-->
+
+
+    <!--            &lt;!&ndash; Add more TextViews for additional columns as needed &ndash;&gt;-->
+
+    <!--        </TableRow>-->
+
+    <!--        <TableRow-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content">-->
+
+    <!--            <TextView-->
+    <!--                android:gravity="center"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:text="Goal Steps" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/GoalT"-->
+    <!--                android:gravity="center"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:text="No data" />-->
+
+
+    <!--            &lt;!&ndash; Add more TextViews for additional columns as needed &ndash;&gt;-->
+
+    <!--        </TableRow>-->
+
+    <!--        <TableRow-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content">-->
+
+    <!--            <TextView-->
+    <!--                android:gravity="center"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:text="Diner" />-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/DinerT"-->
+    <!--                android:gravity="center"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:text="No data" />-->
+
+
+    <!--            &lt;!&ndash; Add more TextViews for additional columns as needed &ndash;&gt;-->
+
+    <!--        </TableRow>-->
+
+
+    <!--        &lt;!&ndash; Add more TableRow elements for additional data rows as needed &ndash;&gt;-->
+
+    <!--    </TableLayout>-->
 
 
 

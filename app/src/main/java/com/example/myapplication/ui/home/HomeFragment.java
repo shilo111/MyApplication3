@@ -75,9 +75,9 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         myRef = database.getReference("users");
         auth = FirebaseAuth.getInstance();
         fireBaseHandler = new FireBaseHandler(auth, root.getContext());
-        caloriesT = root.findViewById(R.id.CaloriesT);
-        GoalT = root.findViewById(R.id.GoalT);
-        DinerT = root.findViewById(R.id.DinerT);
+//        caloriesT = root.findViewById(R.id.CaloriesT);
+//        GoalT = root.findViewById(R.id.GoalT);
+//        DinerT = root.findViewById(R.id.DinerT);
 
         try {
             showHomePageDesign(root);
@@ -86,29 +86,29 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         } catch (java.lang.InstantiationException e) {
             throw new RuntimeException(e);
         }
-        myRef.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+//        myRef.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                Users value = dataSnapshot.getValue(Users.class);
+//                if (value != null) {
+//                    caloriesT.setText("" + value.getCalories());
+//                    GoalT.setText("" + value.getGoalStep());
+//                    goal = value.getGoalStep();
+//                    updateProgressBar();
+//
+//                } else {
+//
+//                    caloriesT.setText("No data");
+//                }
+//            }
 
-                Users value = dataSnapshot.getValue(Users.class);
-                if (value != null) {
-                    caloriesT.setText("" + value.getCalories());
-                    GoalT.setText("" + value.getGoalStep());
-                    goal = value.getGoalStep();
-                    updateProgressBar();
-
-                } else {
-
-                    caloriesT.setText("No data");
-                }
-            }
-
-            @SuppressLint("RestrictedApi")
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());}
-        });
+//            @SuppressLint("RestrictedApi")
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                // Failed to read value
+//                Log.w(TAG, "Failed to read value.", error.toException());}
+//        });
 
 
 
@@ -126,7 +126,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private void showHomePageDesign(View view) throws IllegalAccessException, java.lang.InstantiationException {
         stepCountTextView = view.findViewById(R.id.stepCountTextView1);
 
-        progressBar = view.findViewById(R.id.progressBar);
+
 
 
 
@@ -146,10 +146,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     }
 
 
-    private void updateGoalTextView() {
-        goalTextView.setText("Goal: " + goal);
-        updateProgressBar();
-    }
+
 
     @SuppressLint("MissingSuperCall")
     @Override
@@ -169,11 +166,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-            stepCount = (int) event.values[0];
-            updateStepCountTextView();
-            updateProgressBar();
-        }
+        stepCount = (int) event.values[0];
+//        updateStepCountTextView();
     }
 
     @Override
@@ -182,12 +176,12 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     }
 
     private void updateStepCountTextView() {
-        stepCountTextView.setText("Step Count: " + stepCount);
+        stepCountTextView.setText( stepCount);
     }
 
     private void updateProgressBar() {
         progress = (int) ((stepCount * 100.0) / goal);
-        progressBar.setProgress(progress);
+
     }
 
     //    @Override

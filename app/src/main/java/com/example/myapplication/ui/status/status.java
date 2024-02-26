@@ -11,20 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.myapplication.ExampleFragment;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentStatusBinding;
 import com.example.myapplication.ui.finger.Finger;
-import com.example.myapplication.ui.home.HomeViewModel;
-import com.example.myapplication.ui.library.LibraryViewModel;
 
 
 import com.example.myapplication.ui.notification.Notification;
