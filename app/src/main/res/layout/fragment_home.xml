@@ -7,89 +7,87 @@
     tools:context=".ui.home.HomeFragment">
 
 
-
-
-
-
-
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <LinearLayout
+        android:layout_width="413dp"
+        android:layout_height="734dp"
+        android:background="#D4E4F8"
         android:orientation="vertical"
-        tools:context=".ui.MainActivity"
-        android:background="#D4E4F8">
+        tools:context=".ui.MainActivity">
 
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:layout_height="39dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="z"
-                android:textSize="30dp"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
-                android:textColor="#000"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-thin"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:fontFamily="cursive"
                 android:text="fit"
-                android:textSize="30dp"
+                android:textColor="#000"
+                android:textSize="26dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
+                android:fontFamily="sans-serif-thin"
+                android:text="z"
                 android:textColor="#000"
-                android:textStyle="bold"
-                android:fontFamily="cursive"/>
+                android:textSize="26dp"
+                android:textStyle="bold" />
+
 
         </LinearLayout>
 
 
         <androidx.cardview.widget.CardView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            app:cardElevation="6dp"
-            app:cardUseCompatPadding="true"
+            android:layout_width="271dp"
+            android:layout_height="236dp"
+            android:layout_gravity="center"
             android:innerRadius="0dp"
             android:shape="ring"
-            app:cardCornerRadius="110dp"
             app:cardBackgroundColor="#FFFFFF"
-            android:layout_gravity="center">
+            app:cardCornerRadius="110dp"
+            app:cardElevation="6dp"
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/run"
-                    />
+                    android:src="@drawable/run" />
 
                 <TextView
+                    android:id="@+id/stepCountTextView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textSize="30dp"
                     android:textColor="#3D6CFC"
-                    android:id="@+id/stepCountTextView1"/>
+                    android:textSize="30dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Steps Count" />
+                    android:text="Steps goal: " />
+
+                <TextView
+                    android:id="@+id/GoalT"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No data" />
 
 
             </LinearLayout>
@@ -100,71 +98,111 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
             app:cardElevation="10dp"
-            app:cardUseCompatPadding="true"
-            app:cardCornerRadius="10dp">
+            app:cardUseCompatPadding="true">
 
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="386dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:layout_gravity="center">
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="25dp"
-                    android:textColor="#3D6CFC"
-                    android:drawableLeft="@drawable/calories"
-                    android:drawablePadding="10dp"
-                    android:id="@+id/TV_CALORIES"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Today's Burnt Calories"
-                    android:layout_marginLeft="45dp"/>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="10dp"
-            app:cardUseCompatPadding="true"
-            app:cardCornerRadius="10dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:gravity="left"
                 android:orientation="vertical"
                 android:padding="15dp">
 
 
                 <TextView
+                    android:id="@+id/CaloriesT"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="25dp"
-                    android:textColor="#3D6CFC"
-                    android:drawableLeft="@drawable/distance"
+                    android:layout_gravity="left"
+                    android:drawableLeft="@drawable/calories"
                     android:drawablePadding="10dp"
-                    android:id="@+id/TV_DISTANCE"
-                    />
+                    android:text="No data"
+                    android:textColor="#3D6CFC"
+                    android:textSize="25dp" />
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Today's Distance Covered"
-                    android:layout_marginLeft="45dp"/>
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="45dp"
+                    android:text="Today's Burnt Calories" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+
+                <TextView
+                    android:id="@+id/DISTANCE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:drawableLeft="@drawable/distance"
+                    android:drawablePadding="10dp"
+                    android:text="0"
+                    android:textColor="#3D6CFC"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="45dp"
+                    android:text="Today's Distance Covered" />
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+
+                <TextView
+                    android:id="@+id/DISTfANCE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:drawableLeft="@drawable/distance"
+                    android:drawablePadding="10dp"
+                    android:text="0"
+                    android:textColor="#3D6CFC"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="45dp"
+                    android:text="Today's Distance Covered" />
 
             </LinearLayout>
 

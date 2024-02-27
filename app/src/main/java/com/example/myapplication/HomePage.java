@@ -49,6 +49,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 
 public class HomePage extends AppCompatActivity {
 
@@ -79,9 +82,6 @@ public class HomePage extends AppCompatActivity {
 
         // Initialize Firebase Storage
         storageRef = FirebaseStorage.getInstance().getReference();
-
-        // Method to capture photo and upload to Firebase Storage
-
 
 
     }
@@ -122,6 +122,10 @@ public class HomePage extends AppCompatActivity {
                 showBottomDialog(context);
             }
         });
+
+
+
+
     }
 
     private  void replaceFragment(Fragment fragment) {

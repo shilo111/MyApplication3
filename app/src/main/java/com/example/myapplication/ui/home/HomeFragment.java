@@ -4,6 +4,7 @@ import static androidx.fragment.app.FragmentManager.TAG;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -42,32 +44,33 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class HomeFragment extends Fragment implements SensorEventListener {
-    private EditText editgoal;
-    private  int progress;
-    private SensorManager sensorManager;
     private TextView stepCountTextView;
-    private TextView goalTextView;
-    private ProgressBar progressBar;
-    private int stepCount = 0;
+
+
     private int goal;
-    private EditText goalEditText;
-    private Button button;
+
+
     private DatabaseReference myRef;
     private FirebaseDatabase database;
     private FireBaseHandler fireBaseHandler;
     private FirebaseAuth auth;
 
-    private static final int REQUEST_SENSOR_PERMISSION = 1;
+
     private FragmentHomeBinding binding;
     private TextView caloriesT;
     private TextView GoalT;
     private TextView DinerT;
 
+    private SensorManager sensorManager;
+    private Sensor stepSensor;
+
+    private int stepsCount = 0;
+    private boolean isCounting = false;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-
-        HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -75,8 +78,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         myRef = database.getReference("users");
         auth = FirebaseAuth.getInstance();
         fireBaseHandler = new FireBaseHandler(auth, root.getContext());
-//        caloriesT = root.findViewById(R.id.CaloriesT);
-//        GoalT = root.findViewById(R.id.GoalT);
+        caloriesT = root.findViewById(R.id.CaloriesT);
+        GoalT = root.findViewById(R.id.GoalT);
 //        DinerT = root.findViewById(R.id.DinerT);
 
         try {
@@ -86,30 +89,41 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         } catch (java.lang.InstantiationException e) {
             throw new RuntimeException(e);
         }
-//        myRef.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                Users value = dataSnapshot.getValue(Users.class);
-//                if (value != null) {
-//                    caloriesT.setText("" + value.getCalories());
-//                    GoalT.setText("" + value.getGoalStep());
-//                    goal = value.getGoalStep();
-//                    updateProgressBar();
-//
-//                } else {
-//
-//                    caloriesT.setText("No data");
-//                }
-//            }
+        myRef.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-//            @SuppressLint("RestrictedApi")
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w(TAG, "Failed to read value.", error.toException());}
-//        });
+                Users value = dataSnapshot.getValue(Users.class);
+                if (value != null) {
+                    caloriesT.setText("" + value.getCalories());
+                    GoalT.setText("" + value.getGoalStep());
+                    goal = value.getGoalStep();
 
+                } else {
+
+                    caloriesT.setText("No data");
+                }
+            }
+
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        stepCountTextView = root.findViewById(R.id.stepCountTextView1);
+
+        sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager != null) {
+            stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            if (stepSensor == null) {
+                Toast.makeText(requireActivity(), "Step counter sensor not available", Toast.LENGTH_SHORT).show();
+            } else {
+                startCounting();
+            }
+        }
 
 
         return root;
@@ -117,90 +131,61 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
+
 
     private void showHomePageDesign(View view) throws IllegalAccessException, java.lang.InstantiationException {
         stepCountTextView = view.findViewById(R.id.stepCountTextView1);
 
 
-
-
-
         Toast.makeText(view.getContext(), "Works!", Toast.LENGTH_SHORT).show();
 
-        // Initialize the sensor manager
-        sensorManager = (SensorManager) view.getContext().getSystemService(view.getContext().SENSOR_SERVICE);
+
+    }
 
 
-        // Check for permission to use the step counter sensor
-        if (ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, REQUEST_SENSOR_PERMISSION);
+
+
+
+
+    private void startCounting() {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACTIVITY_RECOGNITION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 1);
         } else {
-            registerStepCounterSensor();
-        }
-
-    }
-
-
-
-
-    @SuppressLint("MissingSuperCall")
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_SENSOR_PERMISSION && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            registerStepCounterSensor();
-        }
-    }
-
-    private void registerStepCounterSensor() {
-        Sensor stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-
-        if (stepCounterSensor != null) {
-            sensorManager.registerListener(this, stepCounterSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            isCounting = true;
+            stepsCount = 0;
+            stepCountTextView.setText(String.valueOf(stepsCount));
+            if (stepSensor != null) {
+                sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            } else {
+                Toast.makeText(requireActivity(), "Step counter sensor not available", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        stepCount = (int) event.values[0];
-//        updateStepCountTextView();
+        stepsCount = (int) event.values[0];
+        stepCountTextView.setText(String.valueOf(stepsCount));
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Not needed for step counter sensor
+        // Not used in step counting
     }
 
-    private void updateStepCountTextView() {
-        stepCountTextView.setText( stepCount);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        stopCounting();
+        binding = null;
     }
 
-    private void updateProgressBar() {
-        progress = (int) ((stepCount * 100.0) / goal);
-
+    private void stopCounting() {
+        isCounting = false;
+        if (stepSensor != null) {
+            sensorManager.unregisterListener(this, stepSensor);
+        }
     }
-
-    //    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        registerStepCounterSensor();
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        sensorManager.unregisterListener(this);
-//    }
-    public int setStepCount(int step)
-    {
-        return (this.stepCount = stepCount);
-
-    }
-
-
-
 }
+
