@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     private int stepsCount = 0;
     private boolean isCounting = false;
-    private String currentDate;
+    private String currentDate ="21-02-22";
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -174,11 +174,15 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         stepCountTextView.setText(String.valueOf(stepsCount));
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String newDate = dateFormat.format(new Date());
+        currentDate = dateFormat.format(new Date());
 
+
+        String newDate = "";
+        // New day, save step count to Firebase
+        newDate = dateFormat.format(new Date());
+        saveStepCountToFirebase(currentDate, stepsCount);
         if (!newDate.equals(currentDate)) {
-            // New day, save step count to Firebase
-            saveStepCountToFirebase(currentDate, stepsCount);
+            stepCountTextView.setText("0");
             currentDate = newDate;
         }
 
@@ -204,7 +208,16 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     }
 
     private void saveStepCountToFirebase(String date, int stepCount) {
-        FireBaseHandler.stepsDate(date,stepCount);
+        if (date != null) {
+            // Implement Firebase logic to save step count for the given date
+            FireBaseHandler.stepsDate(date,stepCount);
+
+        } else {
+            // Handle the case where date is null
+            // You may choose to log an error or take other appropriate action
+            Log.e("Firebase", "Date is null in saveStepCountToFirebase");
+        }
+
     }
 }
 
