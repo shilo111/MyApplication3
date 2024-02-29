@@ -11,15 +11,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,15 +22,12 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.myapplication.FireBaseHandler;
-import com.example.myapplication.HomePage;
+import com.example.myapplication.PersonalData;
 import com.example.myapplication.R;
 import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentHomeBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,23 +46,27 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private int goal;
 
 
-    private DatabaseReference myRef;
+    private DatabaseReference myRef, myRef2;
     private FirebaseDatabase database;
     private FireBaseHandler fireBaseHandler;
     private FirebaseAuth auth;
 
-
+    private int weight;
     private FragmentHomeBinding binding;
     private TextView caloriesT;
     private TextView GoalT;
-    private TextView DinerT;
+    private TextView Burn;
 
     private SensorManager sensorManager;
     private Sensor stepSensor;
 
     private int stepsCount = 0;
     private boolean isCounting = false;
-    private String currentDate ="21-02-22";
+    private String currentDate ="";
+    private static final double AVERAGE_STEP_LENGTH = 0.7; // meters
+    private static final double AVERAGE_WALKING_SPEED_KM_PER_HOUR = 5.0; // km/h
+
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -81,10 +77,13 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         View root = binding.getRoot();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("users");
+        myRef2 = database.getReference("dataUser");
         auth = FirebaseAuth.getInstance();
         fireBaseHandler = new FireBaseHandler(auth, root.getContext());
         caloriesT = root.findViewById(R.id.CaloriesT);
         GoalT = root.findViewById(R.id.GoalT);
+        Burn = root.findViewById(R.id.Burn);
+
 //        DinerT = root.findViewById(R.id.DinerT);
 
         try {
@@ -94,21 +93,48 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         } catch (java.lang.InstantiationException e) {
             throw new RuntimeException(e);
         }
-        myRef.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+
+        myRef2.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                PersonalData value = dataSnapshot.getValue(PersonalData.class);
+                if (value != null) {
+                    weight = value.getWeight();
+
+                } else {
+
+
+                }
+            }
+
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        myRef.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 Users value = dataSnapshot.getValue(Users.class);
                 if (value != null) {
                     caloriesT.setText("" + value.getCalories());
                     GoalT.setText("" + value.getGoalStep());
                     goal = value.getGoalStep();
 
-                } else {
+                    int stepsCount = value.getSteps(); // Assuming this is how you get the step count
+                    double walkingDurationMinutes = calculateWalkingDuration(stepsCount);
+                    double caloriesBurned = calculateCaloriesBurned(stepsCount); // Calculate calories burned during walking
 
+                    Burn.setText(String.valueOf(caloriesBurned)); // Display walking duration in minutes
+
+                } else {
                     caloriesT.setText("No data");
                 }
             }
+
 
             @SuppressLint("RestrictedApi")
             @Override
@@ -136,6 +162,21 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     }
 
+    private double calculateWalkingDuration(int stepsCount) {
+        // Implementation of walking duration calculation method
+        double distanceMeters = stepsCount * 0.7; // Assuming average step length of 0.7 meters
+        double walkingSpeedMetersPerMinute = 5000.0 * 1000 / 60; // Assuming average walking speed of 5 km/h
+        return distanceMeters / walkingSpeedMetersPerMinute; // Walking duration in minutes
+    }
+
+    private double calculateCaloriesBurned(int stepsCount) {
+        // Implementation of calories burned calculation method
+        double walkingDurationMinutes = calculateWalkingDuration(stepsCount);
+        double weightKg = 70.0; // Assuming user's weight is 70 kg
+        double MET_WALKING = 3.5; // MET value for walking
+        return 1000*(MET_WALKING * weightKg * walkingDurationMinutes / 60.0); // Calories burned during walking
+    }
+
 
 
     private void showHomePageDesign(View view) throws IllegalAccessException, java.lang.InstantiationException {
@@ -146,9 +187,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
     }
-
-
-
 
 
 
