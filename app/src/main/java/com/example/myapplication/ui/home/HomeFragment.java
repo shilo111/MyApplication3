@@ -43,6 +43,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class HomeFragment extends Fragment implements SensorEventListener {
     private TextView stepCountTextView;
 
@@ -66,6 +70,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     private int stepsCount = 0;
     private boolean isCounting = false;
+    private String currentDate;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -167,6 +172,16 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         stepsCount = (int) event.values[0];
         stepCountTextView.setText(String.valueOf(stepsCount));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String newDate = dateFormat.format(new Date());
+
+        if (!newDate.equals(currentDate)) {
+            // New day, save step count to Firebase
+            saveStepCountToFirebase(currentDate, stepsCount);
+            currentDate = newDate;
+        }
+
     }
 
     @Override
@@ -186,6 +201,10 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         if (stepSensor != null) {
             sensorManager.unregisterListener(this, stepSensor);
         }
+    }
+
+    private void saveStepCountToFirebase(String date, int stepCount) {
+        FireBaseHandler.stepsDate(date,stepCount);
     }
 }
 

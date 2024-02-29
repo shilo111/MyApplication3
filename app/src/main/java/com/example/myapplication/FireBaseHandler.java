@@ -135,6 +135,16 @@ public class FireBaseHandler {
 
     }
 
+    public static void stepsDate(String date, int stepCount)
+    {
+        myRef.child("dataSteps").child(auth.getCurrentUser().getUid()).child(date).setValue(stepCount).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+            }
+        });
+    }
+
 
 
     public static void setNewData(double height,int weight,int bmi, int bodyFat, double age){

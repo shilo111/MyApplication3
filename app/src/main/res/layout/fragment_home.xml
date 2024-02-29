@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_marginLeft="45dp"
-                    android:text="Today's Burnt Calories" />
+                    android:text="Today's Total Calories" />
 
             </LinearLayout>
 
@@ -151,13 +151,13 @@
 
 
                 <TextView
-                    android:id="@+id/DISTANCE"
+                    android:id="@+id/Burn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:drawableLeft="@drawable/distance"
+                    android:drawableLeft="@drawable/calories"
                     android:drawablePadding="10dp"
-                    android:text="0"
+                    android:text="No data"
                     android:textColor="#3D6CFC"
                     android:textSize="25dp" />
 
@@ -165,7 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="45dp"
-                    android:text="Today's Distance Covered" />
+                    android:text="Today's Burnt Calories" />
 
             </LinearLayout>
 
@@ -194,7 +194,7 @@
                     android:layout_gravity="left"
                     android:drawableLeft="@drawable/distance"
                     android:drawablePadding="10dp"
-                    android:text="0"
+                    android:text="No data"
                     android:textColor="#3D6CFC"
                     android:textSize="25dp" />
 
