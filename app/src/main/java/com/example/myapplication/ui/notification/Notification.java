@@ -27,7 +27,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -84,6 +86,13 @@ public class Notification extends Fragment {
         auth = FirebaseAuth.getInstance();
 
 
+        Spinner notificationSoundSpinner = root.findViewById(R.id.notificationSoundSpinner);
+
+        // Set up the Spinner adapter
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.notification_sounds_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        notificationSoundSpinner.setAdapter(adapter);
 
 
         notificationSwitch = root.findViewById(R.id.notificationSwitch);

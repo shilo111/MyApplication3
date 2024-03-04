@@ -5,39 +5,100 @@
     android:layout_height="match_parent"
     tools:context=".ui.settings.Setting">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Current Password EditText -->
         <EditText
             android:id="@+id/current_password_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
             android:layout_marginTop="24dp"
             android:hint="Current Password"
-            android:inputType="textPassword"
-            android:layout_marginHorizontal="16dp"/>
+            android:inputType="textPassword" />
 
+        <!-- New Password EditText -->
         <EditText
             android:id="@+id/new_password_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/current_password_edittext"
+            android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:hint="New Password"
-            android:inputType="textPassword"
-            android:layout_marginHorizontal="16dp"/>
+            android:inputType="textPassword" />
 
+        <!-- Update Password Button -->
         <Button
             android:id="@+id/update_password_button"
-            android:onClick="updatePassword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/new_password_edittext"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
-            android:text="Update Password"
-            android:layout_centerHorizontal="true"/>
+            android:onClick="updatePassword"
+            android:text="Update Password" />
+
+        <!-- Notification Settings -->
+
+        <!-- Language and Region Settings -->
+        <CheckBox
+            android:id="@+id/notification_settings_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/update_password_button"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
+            android:text="Enable Notifications" />
+
+        <Spinner
+            android:id="@+id/language_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/notification_settings_checkbox"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:hint="Select Language" />
+
+        <!-- Terms of Service and Privacy Policy -->
+
+        <Button
+            android:id="@+id/apply_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/language_spinner"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="164dp"
+            android:text="Apply" />
+
+        <TextView
+            android:id="@+id/privacy_policy_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/terms_of_service_textview"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Privacy Policy"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/terms_of_service_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/language_spinner"
+            android:layout_marginTop="236dp"
+            android:gravity="center"
+            android:text="Terms of Service"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
+
 
 </FrameLayout>

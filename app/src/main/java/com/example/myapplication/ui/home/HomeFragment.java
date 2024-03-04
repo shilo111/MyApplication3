@@ -145,11 +145,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     GoalT.setText("" + value.getGoalStep());
                     goal = value.getGoalStep();
 
-                    int stepsCount = value.getSteps(); // Assuming this is how you get the step count
-                    double caloriesBurned = calculateCaloriesBurned(stepsCount); // Calculate calories burned during walking
-
-                    Burn.setText(String.valueOf(caloriesBurned)); // Display walking duration in minutes
-
                 } else {
                     caloriesT.setText("No data");
                 }
@@ -231,6 +226,11 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         stepsCount = (int) event.values[0];
         stepCountTextView.setText(String.valueOf(stepsCount));
 
+        double caloriesBurned = calculateCaloriesBurned(stepsCount); // Calculate calories burned during walking
+        String formattedCaloriesBurned = String.format("%.2f", caloriesBurned);
+        Burn.setText(formattedCaloriesBurned);
+
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         currentDate = dateFormat.format(new Date());
 
@@ -264,14 +264,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         DISTfANCE.setText(String.format(Locale.getDefault(), "%.2f km", distance / 1000)); // Display distance in kilometers
 
 
-    }
-
-
-    private void cancelNotification() {
-        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.cancel(NOTIFICATION_ID);
-        }
     }
 
 

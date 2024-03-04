@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="languages_array">
+        <item>English</item>
+        <item>Spanish</item>
+        <item>French</item>
+        <!-- Add more languages as needed -->
+    </string-array>
+    <string-array name="notification_sounds_array">
+        <item>Sound 1</item>
+        <item>Sound 2</item>
+        <item>Sound 3</item>
+        <!-- Add more notification sound options as needed -->
+    </string-array>
+</resources>
