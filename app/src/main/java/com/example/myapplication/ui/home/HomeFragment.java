@@ -4,7 +4,11 @@ import static androidx.fragment.app.FragmentManager.TAG;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -15,19 +19,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.FireBaseHandler;
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.PersonalData;
 import com.example.myapplication.R;
 import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentHomeBinding;
+import com.example.myapplication.ui.notification.Notification;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,7 +64,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private FragmentHomeBinding binding;
     private TextView caloriesT;
     private TextView GoalT;
-    private TextView Burn;
+    private TextView Burn, DISTfANCE;
 
     private SensorManager sensorManager;
     private Sensor stepSensor;
@@ -66,8 +75,16 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private static final double AVERAGE_STEP_LENGTH = 0.7; // meters
     private static final double AVERAGE_WALKING_SPEED_KM_PER_HOUR = 5.0; // km/h
 
+    private double strideLength; // Stride length in meters
 
+    // Height of the user in centimeters
+    private double userHeightCm = 170;
 
+    private static final int NOTIFICATION_ID = 123;
+    private static final String CHANNEL_ID = "StepCounterChannel";
+    private Switch otherFragmentSwitch;
+
+    private static final String TAG = "YourFragment";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -83,8 +100,10 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         caloriesT = root.findViewById(R.id.CaloriesT);
         GoalT = root.findViewById(R.id.GoalT);
         Burn = root.findViewById(R.id.Burn);
-
+        DISTfANCE = root.findViewById(R.id.DISTfANCE);
 //        DinerT = root.findViewById(R.id.DinerT);
+        strideLength = 0.415 * (userHeightCm / 100);
+
 
         try {
             showHomePageDesign(root);
@@ -101,6 +120,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 PersonalData value = dataSnapshot.getValue(PersonalData.class);
                 if (value != null) {
                     weight = value.getWeight();
+//                    userHeightCm = value.getHeight();
+//                    strideLength = 0.415 * (userHeightCm / 100);
 
                 } else {
 
@@ -125,7 +146,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     goal = value.getGoalStep();
 
                     int stepsCount = value.getSteps(); // Assuming this is how you get the step count
-                    double walkingDurationMinutes = calculateWalkingDuration(stepsCount);
                     double caloriesBurned = calculateCaloriesBurned(stepsCount); // Calculate calories burned during walking
 
                     Burn.setText(String.valueOf(caloriesBurned)); // Display walking duration in minutes
@@ -214,6 +234,22 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         currentDate = dateFormat.format(new Date());
 
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        boolean switchState = sharedPreferences.getBoolean("notification_switch_state", false);
+        Log.d(TAG, "Switch state: " + switchState);
+
+        if (switchState == true) {
+            Log.d(TAG, "step count: " + stepsCount);
+            showNotification(stepsCount, goal);
+
+        } else {
+            Log.d("YourFragment", "OtherFragment not found");
+        }
+
+
+        Log.d(TAG, "Switch state: " + switchState);
+
+
 
         String newDate = "";
         // New day, save step count to Firebase
@@ -224,6 +260,39 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             currentDate = newDate;
         }
 
+        double distance = stepsCount * strideLength;
+        DISTfANCE.setText(String.format(Locale.getDefault(), "%.2f km", distance / 1000)); // Display distance in kilometers
+
+
+    }
+
+
+    private void cancelNotification() {
+        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.cancel(NOTIFICATION_ID);
+        }
+    }
+
+
+    private int showNotification(int stepsCount, int goal) {
+        if(stepsCount>=goal) {
+            Intent notificationIntent = new Intent(getContext(), MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, notificationIntent, 0);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
+                    .setSmallIcon(R.drawable.notification)
+                    .setContentTitle("Step Count Goal Reached!")
+                    .setContentText("Congratulations! You've reached your step count goal.")
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+
+            NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.notify(NOTIFICATION_ID, builder.build());
+            }
+        }
+        return 0;
     }
 
     @Override

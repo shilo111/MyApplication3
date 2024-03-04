@@ -62,7 +62,7 @@ public class Personal extends Fragment {
         bmiEditText = root.findViewById(R.id.bmiEditText);
         bodyFatEditText = root.findViewById(R.id.bodyFatEditText);
         button = root.findViewById(R.id.saveButton);
-
+        bmiEditText.setFocusable(false);
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();

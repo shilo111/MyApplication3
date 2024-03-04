@@ -1,19 +1,16 @@
 package com.example.myapplication;
 
 public class Datasteps {
-    private int steps; // Assuming this is one of the fields in your Datasteps class
+    private int steps; // Assuming steps is an integer value
 
-    // Default constructor
     public Datasteps() {
-        // Default constructor required by Firebase for deserialization
+        // Default constructor required for Firebase
     }
 
-    // Constructor with arguments if needed
     public Datasteps(int steps) {
         this.steps = steps;
     }
 
-    // Getter and setter methods for steps field
     public int getSteps() {
         return steps;
     }

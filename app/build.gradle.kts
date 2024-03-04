@@ -2,6 +2,11 @@ plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
 }
+ext {
+    // Define the version of androidx.appcompat library
+    appCompatVersion = "1.4.0" // or the latest version available
+}
+var appCompatVersion = "1.4.0" // or the latest version available
 
 android {
     namespace = "com.example.myapplication"
@@ -41,12 +46,15 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation ("androidx.biometric:biometric:1.0.1")
     implementation ("com.squareup.picasso:picasso:2.71828") // or the latest version
+    implementation ("androidx.preference:preference-ktx:1.1.1")
+    implementation ("androidx.appcompat:appcompat:$appCompatVersion")
 
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-database")
      // or the latest version
     implementation ("com.github.bumptech.glide:glide:4.14.0")
+    implementation("androidx.preference:preference:1.2.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.14.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
@@ -70,7 +78,18 @@ dependencies {
     implementation ("com.google.android.material:material:1.3.0-alpha03")
 
 
+    implementation ("androidx.core:core-ktx:1.7.0")
+    implementation ("androidx.appcompat:appcompat:1.4.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.4.0")
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.4.0")
+    implementation ("androidx.constraintlayout:constraintlayout:2.1.3")
+
+
+
 }
+
+
 
 configurations.all {
     resolutionStrategy {
