@@ -15,11 +15,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.myapplication.FireBaseHandler;
+import com.example.myapplication.FoodAdapter;
+import com.example.myapplication.FoodItem;
 import com.example.myapplication.R;
 import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentDashboardBinding;
@@ -35,6 +39,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.core.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
@@ -48,7 +55,9 @@ public class DashboardFragment extends Fragment {
 
     private FireBaseHandler fireBaseHandler;
 
-
+    private RecyclerView recyclerView;
+    private FoodAdapter foodAdapter;
+    private List<FoodItem> foodItemList;
 
 
 
@@ -65,8 +74,8 @@ public class DashboardFragment extends Fragment {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("users");
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+//        final TextView textView = binding.textDashboard;
+//        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         auth = FirebaseAuth.getInstance();
         fireBaseHandler = new FireBaseHandler(auth, root.getContext());
@@ -99,8 +108,44 @@ public class DashboardFragment extends Fragment {
                 Log.w(TAG, "Failed to read value.", error.toException());}
         });
 
+
+
+        recyclerView = root.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        foodItemList = new ArrayList<>();
+        foodAdapter = new FoodAdapter(foodItemList);
+        recyclerView.setAdapter(foodAdapter);
+
+//        retrieveFoodItemsFromFirebase();
+
         return root;
     }
+
+
+
+//    private void retrieveFoodItemsFromFirebase() {
+//        DatabaseReference foodItemsRef = FirebaseDatabase.getInstance().getReference().child("users").child(auth.getCurrentUser().getUid()).child("Fooditems").child("Fooditem");
+//        foodItemsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    FoodItem foodItem = snapshot.getValue(FoodItem.class);
+//                    if (foodItem != null) {
+//                        foodItemList.add(foodItem);
+//                    }
+//                }
+//                foodAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // Handle error
+//            }
+//        });
+//    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -119,7 +164,10 @@ public class DashboardFragment extends Fragment {
                 String foodItem = editTextFood.getText().toString();
                 String caloriesStr = editTextCalories.getText().toString();
 
-    if (!foodItem.isEmpty() && !caloriesStr.isEmpty()) {
+                if (foodItem.isEmpty() || caloriesStr.isEmpty()) {
+                    Toast.makeText(getContext(), "Please enter both food name and calories", Toast.LENGTH_SHORT).show();
+                    return;
+                }
         int calories = Integer.parseInt(caloriesStr);
         totalCalories += calories;
         //textViewTotalCalories.setText("Total Calories: " + totalCalories);
@@ -138,13 +186,27 @@ public class DashboardFragment extends Fragment {
                     Toast.makeText(getActivity().getApplicationContext(), "Please try again :(", Toast.LENGTH_SHORT).show();
                 }
             });
+
+            myRef.child(auth.getCurrentUser().getUid()).child("Fooditems").child("Fooditem").setValue(foodItem).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+
+                    Toast.makeText(getActivity().getApplicationContext(), "Well done!!! food", Toast.LENGTH_SHORT).show();
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Please try again :(", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         // Clear the input fields
         editTextFood.getText().clear();
         editTextCalories.getText().clear();
     }
-}
+
 
 
         });

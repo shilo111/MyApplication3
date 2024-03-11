@@ -48,6 +48,7 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:2.71828") // or the latest version
     implementation ("androidx.preference:preference-ktx:1.1.1")
     implementation ("androidx.appcompat:appcompat:$appCompatVersion")
+    implementation ("androidx.annotation:annotation:1.7.1") // or the version you are using
 
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
@@ -70,6 +71,8 @@ dependencies {
     implementation("androidx.activity:activity:1.8.0")
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
+    implementation ("com.android.support:recyclerview-v7:28.0.0") // or the version you are using
+    implementation ("androidx.recyclerview:recyclerview:1.0.0'")// or the version you are using
 
 
     testImplementation("junit:junit:4.13.2")

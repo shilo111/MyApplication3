@@ -57,12 +57,12 @@ public class Notification extends Fragment {
     private FragmentNotificationBinding binding;
     private DatabaseReference myRef, myRef2;
     private FirebaseDatabase database;
-    private FireBaseHandler fireBaseHandler;
+    private FireBaseHandler fireBaseHandler; // Assuming this is a custom handler for Firebase operations
     private FirebaseAuth auth;
-    private  int stepGoal;
+    private int stepGoal;
     private static final int NOTIFICATION_ID = 123;
     private static final String CHANNEL_ID = "StepCounterChannel";
-    private String currentDate ="";
+    private String currentDate = "";
     private int stepCount; // Assume this is retrieved from Firebase
     private Switch notificationSwitch;
     private SharedPreferences sharedPreferences;
@@ -70,6 +70,7 @@ public class Notification extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initialize SharedPreferences for saving notification switch state
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
     }
 
@@ -77,15 +78,17 @@ public class Notification extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        // Inflate the layout for this fragment using data binding
         binding = FragmentNotificationBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        // Initialize Firebase components
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("users");
         myRef2 = database.getReference("dataSteps");
         auth = FirebaseAuth.getInstance();
 
-
+        // Initialize notification sound spinner
         Spinner notificationSoundSpinner = root.findViewById(R.id.notificationSoundSpinner);
 
         // Set up the Spinner adapter
@@ -94,26 +97,25 @@ public class Notification extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         notificationSoundSpinner.setAdapter(adapter);
 
-
+        // Initialize notification switch and set its state based on saved preferences
         notificationSwitch = root.findViewById(R.id.notificationSwitch);
-
-        // Load the saved switch state
         boolean switchState = sharedPreferences.getBoolean("notification_switch_state", false);
         notificationSwitch.setChecked(switchState);
 
+        // Set up listener for notification switch state changes
         notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // Save the switch state
+                // Save the switch state in SharedPreferences
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("notification_switch_state", isChecked);
                 editor.apply();
             }
         });
 
-        return root;
-
+        return root; // Return the root view
     }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
