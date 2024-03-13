@@ -1,67 +1,49 @@
 package com.example.myapplication;
+
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
-public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
+public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
+    private List<FoodItem> foodItemList;
 
-    private List<FoodItem> foodItems;
-    private OnItemClickListener listener;
-
-    // Interface for item click listener
-    public interface OnItemClickListener {
-        void onItemClick(FoodItem foodItem);
-    }
-
-    // Constructor
-    public FoodAdapter(List<FoodItem> foodItems) {
-        this.foodItems = foodItems;
-
+    public FoodAdapter(List<FoodItem> foodItemList) {
+        this.foodItemList = foodItemList;
     }
 
     @NonNull
     @Override
-    public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_food, parent, false);
-        return new FoodViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
-        FoodItem foodItem = foodItems.get(position);
-        holder.bind(foodItem, listener);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        FoodItem foodItem = foodItemList.get(position);
+        holder.foodNameTextView.setText(foodItem.getName());
+        holder.caloriesTextView.setText(String.valueOf(foodItem.getCalories()));
     }
 
     @Override
     public int getItemCount() {
-        return foodItems.size();
+        return foodItemList.size();
     }
 
-    // ViewHolder class
-    public static class FoodViewHolder extends RecyclerView.ViewHolder {
-
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView foodNameTextView;
+        TextView caloriesTextView;
 
-        public FoodViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             foodNameTextView = itemView.findViewById(R.id.foodNameTextView);
-        }
-
-        // Bind method to bind data to views and set click listener
-        public void bind(final FoodItem foodItem, final OnItemClickListener listener) {
-            foodNameTextView.setText(foodItem.getName());
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(foodItem);
-                }
-            });
+            caloriesTextView = itemView.findViewById(R.id.caloriesTextView);
         }
     }
 }
+

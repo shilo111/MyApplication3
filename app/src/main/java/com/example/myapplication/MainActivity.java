@@ -66,19 +66,26 @@ public class MainActivity extends AppCompatActivity {
         String email = String.valueOf(emailInput.getText());
         String password = String.valueOf(passInput.getText());
 
-        f.signIn(email, password);
-
-    }
-
-   @Override
-    protected void onStart() {
-        super.onStart();
-        if (auth.getCurrentUser() != null) {
-            Intent intent = new Intent(MainActivity.this, HomePage.class);
-            startActivity(intent);
-            finish();
+        if((email.isEmpty()|| password.isEmpty())) {
+            Toast.makeText(this, "please fill out the full email and passwords", Toast.LENGTH_SHORT).show();
         }
+        else
+        {
+            f.signIn(email, password);
+        }
+
+
     }
+
+//   @Override
+//    protected void onStart() {
+//        super.onStart();
+//        if (auth.getCurrentUser() != null) {
+//            Intent intent = new Intent(MainActivity.this, HomePage.class);
+//            startActivity(intent);
+//            finish();
+//        }
+//    }
 
     @Override
     protected void onDestroy() {

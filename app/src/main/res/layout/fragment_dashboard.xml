@@ -53,13 +53,14 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="414dp"
-        android:layout_height="505dp"
+        android:layout_width="413dp"
+        android:layout_height="519dp"
+        android:layout_below="@id/buttonAdd"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTotalCalories"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_editor_absoluteX="-3dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editTextFood"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
