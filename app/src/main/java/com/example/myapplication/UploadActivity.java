@@ -49,6 +49,7 @@ public class UploadActivity extends AppCompatActivity {
         uploadImage = findViewById(R.id.uploadImage);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+        FloatingActionButton exit = findViewById(R.id.exit1);
         ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -81,6 +82,14 @@ public class UploadActivity extends AppCompatActivity {
                 } else  {
                     Toast.makeText(UploadActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UploadActivity.this, HomePage.class);
+                startActivity(intent);
             }
         });
     }

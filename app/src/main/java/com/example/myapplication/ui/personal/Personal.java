@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.personal;
 
 import androidx.lifecycle.ViewModelProvider;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,7 +65,7 @@ public class Personal extends Fragment {
         bodyFatEditText = root.findViewById(R.id.bodyFatEditText);
         button = root.findViewById(R.id.saveButton);
         bmiEditText.setFocusable(false);
-
+        bmiEditText.setTextColor(Color.GRAY);
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
         auth = FirebaseAuth.getInstance();
