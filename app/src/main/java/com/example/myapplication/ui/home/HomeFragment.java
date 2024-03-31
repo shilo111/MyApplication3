@@ -8,12 +8,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +34,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.FireBaseHandler;
 import com.example.myapplication.MainActivity;
+import com.example.myapplication.NetworkChangeReceiver;
 import com.example.myapplication.PersonalData;
 import com.example.myapplication.R;
 import com.example.myapplication.Users;
@@ -85,10 +88,14 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private Switch otherFragmentSwitch;
 
     private static final String TAG = "YourFragment";
-
+    private NetworkChangeReceiver receiver;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+
+//        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+//        receiver = new NetworkChangeReceiver();
+//        getActivity().registerReceiver(receiver, filter);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -176,6 +183,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
     }
+
 
     private double calculateWalkingDuration(int stepsCount) {
         // Implementation of walking duration calculation method
@@ -317,6 +325,23 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             Log.e("Firebase", "Date is null in saveStepCountToFirebase");
         }
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkChangeReceiver();
+        // Register the broadcast receiver here
+        getActivity().registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Unregister the broadcast receiver here
+        getActivity().unregisterReceiver(receiver);
     }
 }
 
