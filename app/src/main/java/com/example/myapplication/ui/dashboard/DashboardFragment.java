@@ -176,20 +176,25 @@ public class DashboardFragment extends Fragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 EditText foodNameEditText = view.findViewById(R.id.editTextFood);
                 EditText caloriesEditText = view.findViewById(R.id.editTextCalories);
 
                 String foodName = foodNameEditText.getText().toString();
                 int calories = Integer.parseInt(caloriesEditText.getText().toString());
+                if(foodName.isEmpty()) {//check why its crashing and not showing the toast
+                    Toast.makeText(getContext(), "Please enter both food name and calories", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    // Save to Firebase
+                    String key = mDatabase.child("foodItems").push().getKey();
+                    FoodItem foodItem = new FoodItem(foodName, calories);
+                    mDatabase.child("foodItems").child(key).setValue(foodItem.toMap());
 
-                // Save to Firebase
-                String key = mDatabase.child("foodItems").push().getKey();
-                FoodItem foodItem = new FoodItem(foodName, calories);
-                mDatabase.child("foodItems").child(key).setValue(foodItem.toMap());
-
-                // Clear EditText fields
-                foodNameEditText.setText("");
-                caloriesEditText.setText("");
+                    // Clear EditText fields
+                    foodNameEditText.setText("");
+                    caloriesEditText.setText("");
+                }
             }
         });
 

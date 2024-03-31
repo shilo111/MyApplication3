@@ -5,12 +5,21 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
@@ -29,6 +38,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import android.Manifest;
 
 
 public class UploadActivity extends AppCompatActivity {
@@ -40,6 +50,11 @@ public class UploadActivity extends AppCompatActivity {
     private Uri imageUri;
     final  private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Images/" + auth.getCurrentUser().getUid());
     final private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+
+    private static final int REQUEST_IMAGE_FROM_GALLERY = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 1001;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,14 +81,48 @@ public class UploadActivity extends AppCompatActivity {
                 }
         );
         uploadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent photoPicker = new Intent();
-                photoPicker.setAction(Intent.ACTION_GET_CONTENT);
-                photoPicker.setType("image/*");
-                activityResultLauncher.launch(photoPicker);
-            }
-        });
+           @Override
+           public void onClick(View view) {
+               AlertDialog.Builder builder = new AlertDialog.Builder(UploadActivity.this);
+               builder.setTitle("Choose an action");
+               builder.setItems(new CharSequence[]{"Open Gallery", "Take Photo"}, new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+                       switch (which) {
+                           case 0:
+                               Intent photoPicker = new Intent(Intent.ACTION_PICK);
+                               photoPicker.setType("image/*");
+                               activityResultLauncher.launch(photoPicker);
+                               break;
+                           case 1:
+
+                               Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                               if (ContextCompat.checkSelfPermission(UploadActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                                   // Request CAMERA permission
+                                   ActivityCompat.requestPermissions(UploadActivity.this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+                               } else {
+                                   // Permission has already been granted, proceed with opening the camera
+                                   startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                                   activityResultLauncher.launch(takePictureIntent);//לבדוק!!!!!!!!!!!
+
+
+                               }
+//                               Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                               if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//                                   startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//                               } else {
+//                                   // Handle case where camera app is not available
+//                                   Toast.makeText(UploadActivity.this, "Camera app not available", Toast.LENGTH_SHORT).show();
+//                               }
+                               break;
+                       }
+                   }
+               });
+               builder.show();
+           }
+       });
+
+
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,4 +182,18 @@ public class UploadActivity extends AppCompatActivity {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(contentResolver.getType(fileUri));
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
+            // Get the photo from the data intent
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+            // Do something with the captured image, for example, display it in an ImageView
+            uploadImage.setImageBitmap(imageBitmap);
+
+        }
+    }
+
 }
