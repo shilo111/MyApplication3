@@ -194,6 +194,13 @@ public class DashboardFragment extends Fragment {
                     // Clear EditText fields
                     foodNameEditText.setText("");
                     caloriesEditText.setText("");
+
+                    myRef.child("dataSteps").child(auth.getCurrentUser().getUid()).child("calories").setValue(calories).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                        }
+                    });
                 }
             }
         });
