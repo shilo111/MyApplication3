@@ -184,8 +184,12 @@ public class FireBaseHandler {
         });
 
 
+//        Toast.makeText(context, "You can see your bmi jest go to settings and personal!", Toast.LENGTH_SHORT).show();
+//        Intent intent = new Intent(context.getApplicationContext(), HomePage.class);
+//        context.startActivity(intent);
+
         Toast.makeText(context, "You can see your bmi jest go to settings and personal!", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(context.getApplicationContext(), HomePage.class);
+        Intent intent = new Intent(context.getApplicationContext(), MainSlider.class);
         context.startActivity(intent);
 
     }

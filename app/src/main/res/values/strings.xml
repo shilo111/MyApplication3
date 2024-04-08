@@ -20,4 +20,17 @@
     <string name="menu_slideshow">Slideshow</string>
 
 
+    //Headings
+    <string name="heading_one">Quick &amp; Easy app</string>
+    <string name="heading_two">Instant step counting</string>
+    <string name="heading_three">monitoring calories</string>
+    <string name="heading_fourth">Anywhere, anytime</string>
+
+    //Description
+    <string name="desc_one"> simplifies your fitness journey by offering a user-friendly interface and seamless navigation. Get started effortlessly and track your progress without any hassle.</string>
+    <string name="desc_two">With our Instant Step Counting feature, you can accurately monitor your daily activity in real-time. Whether you\'re walking, running, or hiking, stay informed about your steps instantly to keep up with your fitness goals.</string>
+    <string name="desc_three">Stay on top of your calorie intake with our comprehensive monitoring system. Track the calories you consume and burn throughout the day, helping you make informed decisions about your diet and exercise routine.</string>
+    <string name="desc_fourth">"Access your fitness data whenever and wherever you are with our app. Whether you're at home, work, or on the go, take control of your health and wellness journey with ease.</string>
+
+
 </resources>
