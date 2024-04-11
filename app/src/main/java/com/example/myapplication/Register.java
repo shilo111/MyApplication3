@@ -82,6 +82,14 @@ public class Register extends AppCompatActivity {
         String email = String.valueOf(emailInput.getText());
         String password = String.valueOf(passInput.getText());
 
-        f.register(email, password);
+
+        if((email.isEmpty()|| password.isEmpty())) {
+            Toast.makeText(this, "please fill out the full email and password", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            f.register(email, password);
+        }
+
     }
 }

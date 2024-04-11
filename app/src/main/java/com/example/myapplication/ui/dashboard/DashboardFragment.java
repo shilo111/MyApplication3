@@ -156,9 +156,9 @@ public class DashboardFragment extends Fragment {
         binding = null;
     }
     private void showHomePageDesign(View view) throws IllegalAccessException, java.lang.InstantiationException {
-//        editTextFood = view.findViewById(R.id.editTextFood);
-//        editTextCalories = view.findViewById(R.id.editTextCalories);
-//        Button btn = view.findViewById(R.id.buttonAdd);
+        editTextFood = view.findViewById(R.id.editTextFood);
+        editTextCalories = view.findViewById(R.id.editTextCalories);
+
 
 
 
@@ -173,76 +173,62 @@ public class DashboardFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         Button addButton = view.findViewById(R.id.buttonAdd);
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+                String foodItem = editTextFood.getText().toString();
+                String caloriesStr = editTextCalories.getText().toString();
 
-                EditText foodNameEditText = view.findViewById(R.id.editTextFood);
-                EditText caloriesEditText = view.findViewById(R.id.editTextCalories);
-
-                String foodName = foodNameEditText.getText().toString();
-                int calories = Integer.parseInt(caloriesEditText.getText().toString());
-                if(foodName.isEmpty()) {//check why its crashing and not showing the toast
+                if (foodItem.isEmpty() || caloriesStr.isEmpty()) {
                     Toast.makeText(getContext(), "Please enter both food name and calories", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-                else {
-                    // Save to Firebase
-                    String key = mDatabase.child("foodItems").push().getKey();
-                    FoodItem foodItem = new FoodItem(foodName, calories);
-                    mDatabase.child("foodItems").child(key).setValue(foodItem.toMap());
+        int calories = Integer.parseInt(caloriesStr);
+        totalCalories += calories;
+        //textViewTotalCalories.setText("Total Calories: " + totalCalories);
 
-                    // Clear EditText fields
-                    foodNameEditText.setText("");
-                    caloriesEditText.setText("");
+        fireBaseHandler.getUserDetails(myRef, user -> {
 
-                    myRef.child("dataSteps").child(auth.getCurrentUser().getUid()).child("calories").setValue(calories).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
+            myRef.child(auth.getCurrentUser().getUid()).child("calories").setValue(totalCalories).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Well done!!!", Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
                 }
-            }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Please try again :(", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+//            myRef.child(auth.getCurrentUser().getUid()).child("Fooditems").child("Fooditem").setValue(foodItem).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                @Override
+//                public void onSuccess(Void unused) {
+//
+//                    Toast.makeText(getActivity().getApplicationContext(), "Well done!!! food", Toast.LENGTH_SHORT).show();
+//
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    Toast.makeText(getActivity().getApplicationContext(), "Please try again :(", Toast.LENGTH_SHORT).show();
+//                }
+//            });
         });
 
-        // Read from Firebase
-        mDatabase.child("foodItems").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                FoodItem foodItem = FoodItem.fromSnapshot(snapshot);
-                foodItemList.add(foodItem);
-                adapter.notifyDataSetChanged();
-            }
+        // Clear the input fields
+        editTextFood.getText().clear();
+        editTextCalories.getText().clear();
+    }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
         });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        btn.setOnClickListener(new View.OnClickListener() {
+//        addButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
 //                String foodItem = editTextFood.getText().toString();

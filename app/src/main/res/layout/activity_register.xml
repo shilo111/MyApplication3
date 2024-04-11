@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/log_in_back"
+    android:background="@drawable/background2"
     android:padding="30dp"
     android:layout_height="match_parent"
     tools:context=".Register">
@@ -13,8 +13,7 @@
         android:id="@+id/imageView3"
         android:layout_width="232dp"
         android:layout_height="69dp"
-        android:layout_weight="1"
-        app:srcCompat="@drawable/logo" />
+        android:layout_weight="1" />
 
     <TextView
         android:layout_width="match_parent"
@@ -102,23 +101,18 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="already have an acount?"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
 
-        <TextView
+
+        <Button
             android:id="@+id/reg_sign_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="Sign in"
             android:onClick="signIn"
-            android:textColor="@color/blue"
-            android:textSize="15sp"
+
+            android:textColor="@color/background"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
     </LinearLayout>

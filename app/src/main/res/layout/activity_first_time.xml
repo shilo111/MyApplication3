@@ -14,70 +14,59 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="103dp">
 
-        <EditText
-            android:id="@+id/heightEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:hint="Hight"
-            android:inputType="number" />
+<!--        <EditText-->
+<!--            android:id="@+id/heightEditText"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_alignParentTop="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            android:hint="Hight"-->
+<!--            android:inputType="number" />-->
 
-        <EditText
-            android:id="@+id/bodyFatEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/bmiEditText"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="-62dp"
-            android:hint="BodyFat"
-            android:inputType="number" />
+<!--        <EditText-->
+<!--            android:id="@+id/bodyFatEditText"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignBottom="@+id/ageEditText"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            android:layout_marginBottom="-62dp"-->
+<!--            android:hint="BodyFat"-->
+<!--            android:inputType="number" />-->
 
-        <EditText
-            android:id="@+id/bmiEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/ageEditText"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="-58dp"
-            android:hint="Bmi"
-            android:inputType="number" />
 
-        <EditText
-            android:id="@+id/ageEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/weightEditText"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="-68dp"
-            android:hint="Age"
-            android:inputType="number" />
 
-        <EditText
-            android:id="@+id/weightEditText"
-            android:layout_width="359dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/heightEditText"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="23dp"
-            android:layout_marginEnd="18dp"
-            android:hint="Weight"
-            android:inputType="number" />
+<!--        <EditText-->
+<!--            android:id="@+id/ageEditText"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignBottom="@+id/weightEditText"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginStart="16dp"-->
+<!--            android:layout_marginEnd="16dp"-->
+<!--            android:layout_marginBottom="-68dp"-->
+<!--            android:hint="Age"-->
+<!--            android:inputType="number" />-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/weightEditText"-->
+<!--            android:layout_width="359dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@+id/heightEditText"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginStart="18dp"-->
+<!--            android:layout_marginTop="23dp"-->
+<!--            android:layout_marginEnd="18dp"-->
+<!--            android:hint="Weight"-->
+<!--            android:inputType="number" />-->
 
         <Button
             android:id="@+id/saveButton"
@@ -90,6 +79,74 @@
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="316dp"
             android:text="Save" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/heightEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Height- 160-210 cm"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="90dp"
+            android:layout_alignParentTop="true"
+           >
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/bodyFatEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Body fat"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="170dp">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ageEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Age 18+"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="250dp"
+            android:layout_alignParentTop="true"
+            >
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/weightEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Weight- 50-110 KL"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     </RelativeLayout>
 

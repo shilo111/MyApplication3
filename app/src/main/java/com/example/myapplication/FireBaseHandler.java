@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.myapplication.ui.home.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -147,7 +146,7 @@ public class FireBaseHandler {
 
 
 
-    public static void setNewData(double height,int weight,int bmi, int bodyFat, double age){
+    public static void setNewData(double height, int weight, int bmi, int bodyFat, double age){
 
 
 
