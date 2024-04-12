@@ -32,6 +32,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.myapplication.Datasteps;
 import com.example.myapplication.FireBaseHandler;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.NetworkChangeReceiver;
@@ -41,6 +42,7 @@ import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentHomeBinding;
 import com.example.myapplication.ui.notification.Notification;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,7 +63,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private TextView DISTfANCE;
 
     // Firebase
-    private DatabaseReference myRef, myRef2;
+    private DatabaseReference myRef, myRef2, myRef3;
     private FirebaseDatabase database;
     private FireBaseHandler fireBaseHandler;
     private FirebaseAuth auth;
@@ -107,12 +109,89 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         View root = binding.getRoot();
         initializeViews(root);
 
+
         // Initialize Firebase
         initializeFirebase();
 
         // Start counting steps
         startCounting();
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        currentDate = dateFormat.format(new Date());
+        myRef3 = database.getReference("dataSteps");
+        myRef3.child(auth.getCurrentUser().getUid()).child(currentDate).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Long steps = dataSnapshot.getValue(Long.class);
+                if (steps != null) {
+                    stepCountTextView.setText(String.valueOf(steps));
+                } else {
+                    stepCountTextView.setText("No data");
+                }
+            }
+
+
+
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());}
+        });
+
+
+                myRef2.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                PersonalData value = dataSnapshot.getValue(PersonalData.class);
+                if (value != null) {
+                    weight = value.getWeight();
+//                    userHeightCm = value.getHeight();
+//                    strideLength = 0.415 * (userHeightCm / 100);
+
+                } else {
+
+
+                }
+            }
+
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+        myRef.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Users value = dataSnapshot.getValue(Users.class);
+                if (value != null) {
+                    caloriesT.setText("" + value.getCalories());
+                    GoalT.setText("" + value.getGoalStep());
+                    goal = value.getGoalStep();
+
+
+                } else {
+                    caloriesT.setText("No data");
+                }
+            }
+
+
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            // Reset the value if the current user is null
+            stepCountTextView.setText(0);
+        }
         // Return the view
         return root;
     }
@@ -132,6 +211,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("users");
         myRef2 = database.getReference("dataUser");
+        myRef3 = database.getReference("dataSteps");
         auth = FirebaseAuth.getInstance();
         fireBaseHandler = new FireBaseHandler(auth, getContext());
     }
@@ -201,22 +281,46 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         stepsCount = (int) event.values[0];
-        stepCountTextView.setText(String.valueOf(stepsCount));
+        //stepCountTextView.setText(String.valueOf(stepsCount));
 
-        // Update UI with calculated values
-        double caloriesBurned = calculateCaloriesBurned(stepsCount);
+        double caloriesBurned = calculateCaloriesBurned(stepsCount); // Calculate calories burned during walking
         String formattedCaloriesBurned = String.format("%.2f", caloriesBurned);
         Burn.setText(formattedCaloriesBurned);
 
-        // Update Firebase with current step count
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        currentDate = dateFormat.format(new Date());
+
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        boolean switchState = sharedPreferences.getBoolean("notification_switch_state", false);
+        Log.d(TAG, "Switch state: " + switchState);
+
+        if (switchState == true) {
+            Log.d(TAG, "step count: " + stepsCount);
+            showNotification(stepsCount, goal);
+
+        } else {
+            Log.d("YourFragment", "OtherFragment not found");
+        }
+
+
+        Log.d(TAG, "Switch state: " + switchState);
+
+
+
+        String newDate = "";
+        // New day, save step count to Firebase
+        newDate = dateFormat.format(new Date());
         saveStepCountToFirebase(currentDate, stepsCount);
+        if (!newDate.equals(currentDate)) {
+            //stepCountTextView.setText("0");
+            currentDate = newDate;
+        }
 
-        // Show notification if goal is reached
-        showNotification(stepsCount, goal);
-
-        // Update distance traveled
         double distance = stepsCount * strideLength;
-        DISTfANCE.setText(String.format(Locale.getDefault(), "%.2f km", distance / 1000));
+        DISTfANCE.setText(String.format(Locale.getDefault(), "%.2f km", distance / 1000)); // Display distance in kilometers
+
+
     }
 
     // Unused method required by SensorEventListener interface
@@ -259,7 +363,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     }
 
     // Stop counting steps
-    private void stopCounting() {
+    public  void stopCounting() {
         isCounting = false;
         if (sensorManager != null && stepSensor != null) {
             sensorManager.unregisterListener(this, stepSensor);

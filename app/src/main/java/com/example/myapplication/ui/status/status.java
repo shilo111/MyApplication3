@@ -23,6 +23,7 @@ import com.example.myapplication.databinding.FragmentStatusBinding;
 import com.example.myapplication.ui.finger.Finger;
 
 
+import com.example.myapplication.ui.home.HomeFragment;
 import com.example.myapplication.ui.notification.Notification;
 import com.example.myapplication.ui.personal.Personal;
 import com.example.myapplication.ui.reviews.Reviews;
@@ -74,6 +75,7 @@ public class status extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
 

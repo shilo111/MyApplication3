@@ -115,4 +115,21 @@
 
     </LinearLayout>
 
+    <!-- Container for StepCountFragment -->
+    <FrameLayout
+        android:id="@+id/step_count_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <!-- Container for ResetButtonFragment -->
+    <FrameLayout
+        android:id="@+id/reset_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/step_count_container"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"/>
+
 </LinearLayout>
