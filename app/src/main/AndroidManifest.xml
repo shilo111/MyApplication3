@@ -100,6 +100,14 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".DayChangeReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

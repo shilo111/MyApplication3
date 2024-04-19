@@ -49,6 +49,8 @@ dependencies {
     implementation ("androidx.preference:preference-ktx:1.1.1")
     implementation ("androidx.appcompat:appcompat:$appCompatVersion")
     implementation ("androidx.annotation:annotation:1.7.1") // or the version you are using
+    implementation ("com.google.code.gson:gson:2.8.8")
+    implementation ("com.google.code.gson:gson:2.8.8") // Or the latest version
 
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies

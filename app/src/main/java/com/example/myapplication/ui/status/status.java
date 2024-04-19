@@ -18,7 +18,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.myapplication.MainActivity;
+import com.example.myapplication.MySharedPreferences;
+import com.example.myapplication.MySharedPreferencesSteps;
 import com.example.myapplication.R;
+import com.example.myapplication.SharedViewModelStepsFire;
 import com.example.myapplication.databinding.FragmentStatusBinding;
 import com.example.myapplication.ui.finger.Finger;
 
@@ -31,11 +34,16 @@ import com.example.myapplication.ui.settings.Setting;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class status extends Fragment {
 
     private StatusViewModel mViewModel;
     private FragmentStatusBinding binding;
     private TextView emailTextView;
+    private SharedViewModelStepsFire viewModel;
 
     public static status newInstance() {
         return new status();
@@ -46,6 +54,7 @@ public class status extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         StatusViewModel statusViewModel = new ViewModelProvider(this).get(StatusViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModelStepsFire.class);
 
 
 
@@ -71,11 +80,26 @@ public class status extends Fragment {
          Button PersonalIN = root.findViewById(R.id.button3);
          Button Notification = root.findViewById(R.id.button4);
          Button Finger = root.findViewById(R.id.button5);
+        int value = viewModel.getValue();
+
+        Date currentDate = new Date();
+
+// Define a date formatter for the desired format
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+// Format the current date using the formatter
+        String formattedDate = formatter.format(currentDate);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (user != null) {
+                    String email = user.getEmail();
+                    MySharedPreferencesSteps.saveUserData(getContext(), email, formattedDate, value);
+                }
 
+
+                MySharedPreferences.saveBoolean(getContext(), true);
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);
 

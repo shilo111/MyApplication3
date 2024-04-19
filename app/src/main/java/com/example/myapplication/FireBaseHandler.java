@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -192,4 +193,14 @@ public class FireBaseHandler {
         context.startActivity(intent);
 
     }
+
+//    public static void dayStepsSensor(int dayStepsSensor)
+//    {
+//        myRef.child("dayStepsSensor").child("check").setValue(FirstRunOfDay).addOnCanceledListener(new OnCanceledListener() {
+//            @Override
+//            public void onCanceled() {
+//
+//            }
+//        });
+//    }
 }
