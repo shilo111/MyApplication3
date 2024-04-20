@@ -355,6 +355,10 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     int savedValue = entry.getValue();
                     Log.e(TAG, "savedDate: " + savedDate);
                     Log.e(TAG, "savedValue: " + savedValue);
+                    if((int) event.values[0] - savedIntegerValue < 0)
+                    {
+                        MySharedPreferencesINT.saveInteger(getContext(), 0);
+                    }
                     stepsCount = ((int) event.values[0] - savedIntegerValue + savedValue);
                     viewModel.setValue(stepsCount);
 
