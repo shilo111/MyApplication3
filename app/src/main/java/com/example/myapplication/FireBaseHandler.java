@@ -32,6 +32,7 @@ public class FireBaseHandler {
 
 
 
+
     public FireBaseHandler(FirebaseAuth auth, Context context)
     {
         this.auth = auth;
@@ -46,7 +47,25 @@ public class FireBaseHandler {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    newUser();
+
+                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    UserPersonalManager userPersonalManager = new UserPersonalManager(context, userId);
+                    double height = userPersonalManager.getHeight();
+                    int weight = userPersonalManager.getWeight();
+                    double age = userPersonalManager.getAge();
+
+                    if(height > 0 ||weight > 0 ||age > 0 )
+                    {
+
+                        // Child exists
+                        Intent intent = new Intent(context.getApplicationContext(), HomePage.class);
+                        context.startActivity(intent);
+                    }
+                    else {
+                        // Child does not exist
+                        Intent intent = new Intent(context.getApplicationContext(), FirstTime.class);
+                        context.startActivity(intent);
+                    }
 
 
 //                        Toast.makeText(context, "sign in successfully!", Toast.LENGTH_SHORT).show();
@@ -112,26 +131,12 @@ public class FireBaseHandler {
 
     public static void newUser()
     {
-        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Child exists
-                    Intent intent = new Intent(context.getApplicationContext(), HomePage.class);
-                    context.startActivity(intent);
-                } else {
-                    // Child does not exist
-                    Intent intent = new Intent(context.getApplicationContext(), FirstTime.class);
-                    context.startActivity(intent);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
-                Log.e("TAG", "Error: " + databaseError.getMessage());
-            }
-        });
+
+
+
+
+
 
     }
 

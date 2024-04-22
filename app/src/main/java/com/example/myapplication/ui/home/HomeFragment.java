@@ -34,6 +34,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import com.example.myapplication.DayChangeReceiver;
+import com.example.myapplication.DayChecker;
 import com.example.myapplication.FireBaseHandler;
 import com.example.myapplication.FirstRunOfDay2;
 import com.example.myapplication.MainActivity;
@@ -44,6 +45,7 @@ import com.example.myapplication.NetworkChangeReceiver;
 import com.example.myapplication.PersonalData;
 import com.example.myapplication.R;
 import com.example.myapplication.SharedViewModelStepsFire;
+import com.example.myapplication.UserPersonalManager;
 import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentHomeBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -102,7 +104,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private static final int NOTIFICATION_ID = 123;
     private static final String CHANNEL_ID = "StepCounterChannel";
     private Switch otherFragmentSwitch;
-
+    private DayChecker dayChecker;
     private static final String TAG = "YourFragment";
     private NetworkChangeReceiver receiver;
     private boolean fetchedFromFirebase = false;
@@ -133,7 +135,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         myRef3 = database.getReference("dataSteps");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModelStepsFire.class);
-
+        dayChecker = new DayChecker(getContext());
 
         // Get the current date
         Date currentDate = new Date();
@@ -161,11 +163,20 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             } else {
                 MySharedPreferencesSteps.saveUserData(getContext(), userId, formattedDate, 0);
             }
+//
+//            // Check if the day has changed
+//            if (dayChecker.hasDayChanged()) {
+//                // Do something when the day changes
+//                Log.e(TAG, "day changed");
+////            MySharedPreferencesSteps.saveUserData(getContext(), email, formattedDate, stepsCount);
+//
+////            MySharedPreferences.saveBoolean(getContext(), true);
+//
+//            }
+
         }
 
 
-        // Check for date change when the fragment is created
-//        checkForDateChange();
 
 
 
@@ -181,30 +192,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 
 
-        myRef3 = database.getReference("dataSteps");
 
-
-
-//        myRef3.child(auth.getCurrentUser().getUid()).child(currentDate).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Long steps = dataSnapshot.getValue(Long.class);
-//                if (steps != null) {
-//                  stepsFireBase = Math.toIntExact(steps);
-//                    Log.e(TAG, "stepsFireBase inside: " + stepsFireBase);
-//                } else {
-//                    stepCountTextView.setText("No data");
-//                }
-//            }
-//
-//
-//
-//            @SuppressLint("RestrictedApi")
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w(TAG, "Failed to read value.", error.toException());}
-//        });
 
         myRef2.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -221,28 +209,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
                 }
             }
-
-            @SuppressLint("RestrictedApi")
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-        myRef.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Users value = dataSnapshot.getValue(Users.class);
-                if (value != null) {
-                    caloriesT.setText("" + value.getCalories());
-                    GoalT.setText("" + value.getGoalStep());
-                    goal = value.getGoalStep();
-
-                } else {
-                    caloriesT.setText("No data");
-                }
-            }
-
 
             @SuppressLint("RestrictedApi")
             @Override
@@ -283,8 +249,10 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     private double calculateCaloriesBurned(int stepsCount) {
         // Implementation of calories burned calculation method
+        String userId3 = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        UserPersonalManager userPersonalManager = new UserPersonalManager(getContext(), userId3);
         double walkingDurationMinutes = calculateWalkingDuration(stepsCount);
-        double weightKg = 70.0; // Assuming user's weight is 70 kg
+        double weightKg = userPersonalManager.getWeight();
         double MET_WALKING = 3.5; // MET value for walking
         return 1000*(MET_WALKING * weightKg * walkingDurationMinutes / 60.0); // Calories burned during walking
     }
@@ -320,6 +288,19 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+
+        String userId2 = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        UserPersonalManager userPersonalManager = new UserPersonalManager(getContext(), userId2);
+        int stepGoal = userPersonalManager.getGoalStep();
+        GoalT.setText(String.valueOf(stepGoal));
+
+
+
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        String email2 = user.getEmail();
+
         Date currentDate = new Date();
 
 // Define a date formatter for the desired format
@@ -327,6 +308,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
 // Format the current date using the formatter
         String formattedDate = formatter.format(currentDate);
+
+
 
 
 
@@ -363,7 +346,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     viewModel.setValue(stepsCount);
 
                     stepCountTextView.setText(String.valueOf(stepsCount));
-                    // MySharedPreferencesSteps.saveUserData(getContext(), userId, String.valueOf(savedDate), stepsCount);//אני חושב שאני צריך לעשות שברגע שאני לוחץ לוג האוט או שמתחלף יום אז זה שומר את הצעדים, ומוסיף שהוא יציג אותם
                 }
             } else {
                 stepCountTextView.setText("no data");
@@ -396,15 +378,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         Log.d(TAG, "Switch state: " + switchState);
 
 
-//
-//        String newDate = "";
-//        // New day, save step count to Firebase
-//        newDate = dateFormat.format(new Date());
-//        //saveStepCountToFirebase(currentDate, stepsCount);
-//        if (!newDate.equals(currentDate)) {
-//
-//            currentDate = newDate;
-//        }
 
         double distance = stepsCount * strideLength;
         DISTfANCE.setText(String.format(Locale.getDefault(), "%.2f km", distance / 1000)); // Display distance in kilometers

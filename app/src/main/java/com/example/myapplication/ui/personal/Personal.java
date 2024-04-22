@@ -15,9 +15,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.myapplication.FireBaseHandler;
+import com.example.myapplication.FirstTime;
 import com.example.myapplication.PersonalData;
 import com.example.myapplication.R;
 import com.example.myapplication.User;
+import com.example.myapplication.UserPersonalManager;
 import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentPersonalBinding;
 import com.example.myapplication.databinding.FragmentSettingBinding;
@@ -69,35 +71,28 @@ public class Personal extends Fragment {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
         auth = FirebaseAuth.getInstance();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        UserPersonalManager userPersonalManager = new UserPersonalManager(getContext(), userId);
+        double height = userPersonalManager.getHeight();
+        int weight = userPersonalManager.getWeight();
+        int bmi = userPersonalManager.getBMI();
+        String bodyFat = userPersonalManager.getBodyFat();
+        double age = userPersonalManager.getAge();
 
-        myRef.child("dataUser").child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                PersonalData value = dataSnapshot.getValue(PersonalData.class);
+        heightEditText.setText("" + height);
+        weightEditText.setText("" + weight);
+        ageEditText.setText("" +age );
+        bmiEditText.setText("" + bmi);
+        bodyFatEditText.setText("" +bodyFat);
 
-                    heightEditText.setText(("" + value.getHeight()));
-                    weightEditText.setText(("" + value.getWeight()));
-                    ageEditText.setText(("" + value.getAge()));
-                    bmiEditText.setText(("" + value.getBmi()));
-                    bodyFatEditText.setText(("" + value.getBodyFat()));
 
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double height = Double.parseDouble(heightEditText.getText().toString());
-                int weight = Integer.parseInt(weightEditText.getText().toString());
-                double age = Double.parseDouble(ageEditText.getText().toString());
-                int bmi = Integer.parseInt(bmiEditText.getText().toString());
-                int bodeFat = Integer.parseInt(bodyFatEditText.getText().toString());
 
                 calculateBMI();
             }
@@ -139,8 +134,11 @@ public class Personal extends Fragment {
             // Clear BMI EditText if weight or height is empty
             bmiEditText.setText("");
         }
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        UserPersonalManager userPersonalManager = new UserPersonalManager(getContext(), userId);
+        userPersonalManager.setPersonalData((double) height, (int) weight, (int) bmi, String.valueOf(bodeFat), age);
 
-        FireBaseHandler.setNewData((double) height, (int) weight, (int) bmi, bodeFat, age);
+
     }
 
 

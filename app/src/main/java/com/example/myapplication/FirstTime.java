@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.text.TextWatcher;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class FirstTime extends AppCompatActivity {
 EditText heightEditText,weightEditText,ageEditText,bodyFatEditText;
@@ -191,8 +193,15 @@ Button button;
 
 
             height = Float.parseFloat(heightEditText.getText().toString());
-            int bodyFat = Integer.parseInt(bodeFat);
-            FireBaseHandler.setNewData((double) height, (int) weight, (int) bmi, bodyFat, Double.parseDouble(age));
+            String bodyFat = String.valueOf(Integer.parseInt(bodeFat));
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            UserPersonalManager userPersonalManager = new UserPersonalManager(FirstTime.this, userId);
+            userPersonalManager.setPersonalData(height, (int)weight, (int)bmi, bodyFat, Double.parseDouble(age));
+            Toast.makeText(FirstTime.this, "You can see your bmi jest go to settings and personal!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(FirstTime.this, MainSlider.class);
+            startActivity(intent);
+
+
         }
 
 

@@ -22,7 +22,7 @@
         android:icon="@drawable/baseline_subscriptions_24" />
     <item
         android:id="@+id/navigation_status"
-        android:title="history"
+        android:title="settings"
         android:icon="@drawable/baseline_settings_24" />
 
 </menu>

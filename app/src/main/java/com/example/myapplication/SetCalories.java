@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,11 +21,8 @@ import com.google.firebase.database.core.Context;
 
 public class SetCalories extends AppCompatActivity {
     private EditText Setgoal;
-    private FireBaseHandler fireBaseHandler;
-    private FirebaseAuth auth;
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
-    private Context context;
+
+    private UserPersonalManager userPersonalManager;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -33,12 +31,12 @@ public class SetCalories extends AppCompatActivity {
         setContentView(R.layout.activity_set_calories);
         Button btn = findViewById(R.id.Set);
         Setgoal = findViewById(R.id.Setgoal);
-        auth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("users");
 
 
-        fireBaseHandler = new FireBaseHandler(auth, Setgoal.getContext());
+        // Initialize UserPersonalManager with the appropriate context and user identifier
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        userPersonalManager = new UserPersonalManager(this, userId);
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,23 +44,10 @@ public class SetCalories extends AppCompatActivity {
 
 
                 if (!Setgoal.getText().toString().isEmpty()) {
-
-
-                    fireBaseHandler.getUserDetails(myRef, user -> {
-
-                        myRef.child(auth.getCurrentUser().getUid()).child("GoalStep").setValue(foodItem).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(SetCalories.this, "Well done!!!", Toast.LENGTH_SHORT).show();
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(SetCalories.this, "Please try again :(", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    });
+                    userPersonalManager.setGoalStep(foodItem);
+                    Toast.makeText(SetCalories.this, "Well done!!!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(SetCalories.this, HomePage.class);
+                    startActivity(intent);
                 }
             }
         });

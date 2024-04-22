@@ -13,13 +13,16 @@ import androidx.core.content.ContextCompat;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
@@ -39,6 +42,10 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import android.Manifest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class UploadActivity extends AppCompatActivity {
@@ -127,7 +134,7 @@ public class UploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (imageUri != null){
-                    uploadToFirebase(imageUri);
+                    uploadToSharedPreferences(imageUri);
                 } else  {
                     Toast.makeText(UploadActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
                 }
@@ -143,45 +150,100 @@ public class UploadActivity extends AppCompatActivity {
         });
     }
     //Outside onCreate
-    private void uploadToFirebase(Uri uri){
 
+
+
+    private void uploadToSharedPreferences(Uri uri) {
         String caption = uploadCaption.getText().toString();
-        final StorageReference imageReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
-        imageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        DataClass dataClass = new DataClass(uri.toString(), caption);
-                        String key = databaseReference.push().getKey();
-                        databaseReference.child(key).setValue(dataClass);
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(UploadActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(UploadActivity.this, UploadActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
+        String filePath = uri.toString();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UploadData", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Retrieve existing data
+        String existingJson = sharedPreferences.getString("imageData", "");
+        JSONArray jsonArray;
+        try {
+            if (TextUtils.isEmpty(existingJson)) {
+                jsonArray = new JSONArray();
+            } else {
+                jsonArray = new JSONArray(existingJson);
             }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(UploadActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+            // Create a new JSON object for the current image and caption
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("imageUrl", filePath);
+            jsonObject.put("caption", caption);
+            // Add the JSON object to the array
+            jsonArray.put(jsonObject);
+            // Save the updated JSON array back to SharedPreferences
+            editor.putString("imageData", jsonArray.toString());
+            editor.apply();
+
+            // Display success message or perform further actions
+            Toast.makeText(UploadActivity.this, "Uploaded to SharedPreferences", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(UploadActivity.this, HomePage.class);
+            startActivity(intent);
+            // Redirect to another activity or perform necessary actions
+        } catch (JSONException e) {
+            e.printStackTrace();
+            // Handle JSON parsing error
+        }
     }
-    private String getFileExtension(Uri fileUri){
-        ContentResolver contentResolver = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(contentResolver.getType(fileUri));
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //    private void uploadToFirebase(Uri uri){
+//
+//        String caption = uploadCaption.getText().toString();
+//        final StorageReference imageReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
+//        imageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                    @Override
+//                    public void onSuccess(Uri uri) {
+//                        DataClass dataClass = new DataClass(uri.toString(), caption);
+//                        String key = databaseReference.push().getKey();
+//                        databaseReference.child(key).setValue(dataClass);
+//                        progressBar.setVisibility(View.INVISIBLE);
+//                        Toast.makeText(UploadActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(UploadActivity.this, UploadActivity.class);
+//                        startActivity(intent);
+//                        finish();
+//                    }
+//                });
+//            }
+//        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+//                progressBar.setVisibility(View.VISIBLE);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                progressBar.setVisibility(View.INVISIBLE);
+//                Toast.makeText(UploadActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//    private String getFileExtension(Uri fileUri){
+//        ContentResolver contentResolver = getContentResolver();
+//        MimeTypeMap mime = MimeTypeMap.getSingleton();
+//        return mime.getExtensionFromMimeType(contentResolver.getType(fileUri));
+//    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
