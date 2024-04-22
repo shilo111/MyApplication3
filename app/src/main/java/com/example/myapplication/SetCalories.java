@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.databinding.FragmentDashboardBinding;
@@ -22,21 +23,25 @@ import com.google.firebase.database.core.Context;
 public class SetCalories extends AppCompatActivity {
     private EditText Setgoal;
 
+    private EditText editTextFood, editTextCalories;
+    private TextView textViewTotalCalories;
+    private int totalCalories = 0;
     private UserPersonalManager userPersonalManager;
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_calories);
         Button btn = findViewById(R.id.Set);
         Setgoal = findViewById(R.id.Setgoal);
-
+textViewTotalCalories = findViewById(R.id.textViewTotalCalories);
 
         // Initialize UserPersonalManager with the appropriate context and user identifier
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         userPersonalManager = new UserPersonalManager(this, userId);
 
+        textViewTotalCalories.setText("Total calories: " + userPersonalManager.getCalories());
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,6 +55,37 @@ public class SetCalories extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
+        });
+        Button addButton = findViewById(R.id.buttonAdd);
+        editTextFood = findViewById(R.id.editTextFood);
+        editTextCalories = findViewById(R.id.editTextCalories);
+
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View view) {
+                String foodItem = editTextFood.getText().toString();
+                String caloriesStr = editTextCalories.getText().toString();
+
+                if (foodItem.isEmpty() || caloriesStr.isEmpty()) {
+                    Toast.makeText(SetCalories.this, "Please enter both food name and calories", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int calories = Integer.parseInt(caloriesStr);
+                totalCalories = userPersonalManager.getCalories();
+                totalCalories += calories;
+                userPersonalManager.setCalories(totalCalories);
+                textViewTotalCalories.setText("Total calories: " + userPersonalManager.getCalories());
+                // Clear the input fields
+                editTextFood.getText().clear();
+                editTextCalories.getText().clear();
+                Intent intent = new Intent(SetCalories.this, HomePage.class);
+                startActivity(intent);
+            }
+
+
+
         });
 
 

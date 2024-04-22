@@ -293,7 +293,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         UserPersonalManager userPersonalManager = new UserPersonalManager(getContext(), userId2);
         int stepGoal = userPersonalManager.getGoalStep();
         GoalT.setText(String.valueOf(stepGoal));
-
+        caloriesT.setText(String.valueOf(userPersonalManager.getCalories()));
 
 
 
