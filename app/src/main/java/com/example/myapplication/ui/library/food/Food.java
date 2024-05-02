@@ -50,19 +50,19 @@ public class Food extends Fragment {
         webView.setWebChromeClient(new WebChromeClient());
 
         WebView webView2 = root.findViewById(R.id.webView2);
-        String video2 = "<iframe width=\"100%\" height=\"85%\" src=\"https://www.youtube.com/embed/PM8kiHcAD7Q?si=j5X9MU2atBn1v6FJ\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>";
+        String video2 = "<iframe width=\"100%\" height=\"85%\" src=\"https://www.youtube.com/embed/osqvOUJjaCo?si=slLagHmhgLpfkp42\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>";
         webView2.loadData(video2, "text/html","utf-8");
         webView2.getSettings().setJavaScriptEnabled(true);
         webView2.setWebChromeClient(new WebChromeClient());
 
         WebView webView3 = root.findViewById(R.id.webView3);
-        String video3 = "<iframe width=\"100%\" height=\"85%\" src=\"https://www.youtube.com/embed/PM8kiHcAD7Q?si=j5X9MU2atBn1v6FJ\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>";
+        String video3 = "<iframe width=\"100%\" height=\"85%\" src=\"https://www.youtube.com/embed/1N6hbRbyAeQ?si=2FALjZh-e_aJEvxA\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>";
         webView3.loadData(video3, "text/html","utf-8");
         webView3.getSettings().setJavaScriptEnabled(true);
         webView3.setWebChromeClient(new WebChromeClient());
 
         WebView webView4 = root.findViewById(R.id.webView4);
-        String video4 = "<iframe width=\"100%\" height=\"85%\" src=\"https://www.youtube.com/embed/PM8kiHcAD7Q?si=j5X9MU2atBn1v6FJ\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>";
+        String video4 = "<iframe width=\"100%\" height=\"85%\" src=\"https://www.youtube.com/embed/dLairfd8bZU?si=ssmCjce_JJzTy-W2\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>";
         webView4.loadData(video4, "text/html","utf-8");
         webView4.getSettings().setJavaScriptEnabled(true);
         webView4.setWebChromeClient(new WebChromeClient());

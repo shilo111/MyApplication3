@@ -20,6 +20,7 @@
 
     <color name="background">#F0F4F3</color>
     <color name="buttontext">#50C2C9</color>
+    <color name="path_color">#FF0000</color> <!-- Red color -->
 
     //indicator color
     <color name="inactive">#C4C4C4</color>

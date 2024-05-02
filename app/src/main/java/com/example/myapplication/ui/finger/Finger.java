@@ -9,17 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.myapplication.Datasteps;
+import com.example.myapplication.MySharedPreferencesSteps;
 import com.example.myapplication.R;
 import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentFingerBinding;
 import com.example.myapplication.databinding.FragmentPersonalBinding;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -40,17 +43,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 public class Finger extends Fragment {
 
     private FingerViewModel mViewModel;
     private FragmentFingerBinding binding;
     BarChart barChart;
-    private static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private static DatabaseReference myRef = database.getReference();
-    private String currentDate = "";
     private FirebaseAuth auth;
-    private int steps;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -58,92 +58,58 @@ public class Finger extends Fragment {
         binding = FragmentFingerBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        auth = FirebaseAuth.getInstance();
-        loadChartData();
-      //  barChart = root.findViewById(R.id.bar_chart);
+        barChart = root.findViewById(R.id.chart);
 
-//        ArrayList<BarEntry> barEntries = new ArrayList<>();
-//        Calendar calendar = Calendar.getInstance();
-//        int day = calendar.get(Calendar.DAY_OF_MONTH);
-//
-//
-//        // Initialize FirebaseAuth instance after the user is authenticated
-//        FirebaseAuth auth = FirebaseAuth.getInstance();
-//
-//        if (auth.getCurrentUser() != null) {
-//            myRef.child("dataSteps").child(auth.getCurrentUser().getUid()).child(currentDate).addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    Datasteps value = dataSnapshot.getValue(Datasteps.class);
-//                    if (value != null) {
-//                        steps = value.getSteps();
-//
-//                        // Update chart data after retrieving steps
-//                        BarEntry barEntry = new BarEntry(day, steps);
-//                        barEntries.add(barEntry);
-//                        BarDataSet barDataSet = new BarDataSet(barEntries, "steps");
-//                        barDataSet.setColor(Color.YELLOW);
-//                        barDataSet.setDrawValues(false);
-//                        barChart.setData(new BarData(barDataSet));
-//                        barChart.animateY(5000);
-//                        barChart.getDescription().setText("steps chart");
-//                        barChart.getDescription().setTextColor(Color.BLUE);
-//                        barChart.invalidate(); // Invalidate chart to redraw
-//                    } else {
-//                        // Handle the case when value is null
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//                    // Handle onCancelled event
-//                }
-//            });
-//        }
+        // Initialize FirebaseAuth instance after the user is authenticated
+        auth = FirebaseAuth.getInstance();
+
+        // Load chart data from SharedPreferences
+        loadChartData();
 
         return root;
     }
 
     private void loadChartData() {
-        DatabaseReference stepCountRef = FirebaseDatabase.getInstance().getReference("dataSteps").child(auth.getCurrentUser().getUid());
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Map<String, Integer> userData = MySharedPreferencesSteps.getUserData(getContext(), userId);
 
-        stepCountRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<BarEntry> entries = new ArrayList<>();
-                ArrayList<String> labels = new ArrayList<>();
+        if (userData != null) {
+            ArrayList<BarEntry> entries = new ArrayList<>();
+            ArrayList<String> labels = new ArrayList<>();
 
-                int index = 0;
-                for (DataSnapshot dateSnapshot : dataSnapshot.getChildren()) {
-                    String date = dateSnapshot.getKey(); // Get the date
-                    Integer steps = dateSnapshot.getValue(Integer.class); // Get the step count for the date
+            int index = 0;
+            for (Map.Entry<String, Integer> entry : userData.entrySet()) {
+                String date = entry.getKey();
+                int steps = entry.getValue();
 
-                    // Add data to entries and labels
-                    if (steps != null) {
-                        entries.add(new BarEntry(index, steps));
-                        labels.add(date);
-                        index++;
-                    }
-                }
-
-                // Create a dataset from entries
-                BarDataSet dataSet = new BarDataSet(entries, "Steps");
-                BarData barData = new BarData(dataSet);
-
-                // Get the chart reference
-                BarChart chart = getView().findViewById(R.id.chart);
-                chart.setData(barData);
-                chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-                chart.invalidate(); // Refresh the chart
+                // Add data to entries and labels
+                entries.add(new BarEntry(index, steps));
+                labels.add(date);
+                index++;
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
-            }
-        });
+            // Create a dataset from entries
+            BarDataSet dataSet = new BarDataSet(entries, "Steps");
+            BarData barData = new BarData(dataSet);
 
+            // Set labels for the X-axis
+            XAxis xAxis = barChart.getXAxis();
+            xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setGranularity(1);
+
+            // Set chart data
+            barChart.setData(barData);
+            barChart.getDescription().setEnabled(false);
+            barChart.invalidate(); // Refresh the chart
+        } else {
+            Log.d("PathActivity", "no data");
+            // Handle the case when no data is available
+            // For example, display a message or hide the chart
+        }
     }
+
+
 
 
 

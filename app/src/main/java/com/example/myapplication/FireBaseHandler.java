@@ -25,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class FireBaseHandler {
     private static FirebaseDatabase database =  FirebaseDatabase.getInstance();
-    private static DatabaseReference myRef = database.getReference();
+    private static DatabaseReference myRef = database.getReference("dataSteps");
 
     private static FirebaseAuth auth;
     private static Context context;
@@ -142,12 +142,20 @@ public class FireBaseHandler {
 
     public static void stepsDate(String date, int stepCount)
     {
-        myRef.child("dataSteps").child(auth.getCurrentUser().getUid()).child(date).setValue(stepCount).addOnCompleteListener(new OnCompleteListener<Void>() {
+        myRef.child(auth.getCurrentUser().getUid()).child(date).setValue(stepCount).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
+
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("good", "Failed to read value.90989");
             }
         });
+
     }
 
 

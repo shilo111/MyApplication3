@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.myapplication">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
@@ -20,6 +21,8 @@
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -31,6 +34,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
+        <activity
+            android:name=".PathActivity"
+            android:exported="false" />
         <activity
             android:name=".Mainscreen"
             android:exported="false" />
@@ -85,6 +91,10 @@
             android:name=".Register"
             android:exported="false" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAiGqftm3IvHZqVARkCgqqJztAxKLWvJZ8" />
+
         <receiver
             android:name=".StepCountResetReceiver"
             android:exported="true">
@@ -99,14 +109,13 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".DayChangeReceiver"
+        <receiver
+            android:name=".DayChangeReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.DATE_CHANGED" />
             </intent-filter>
         </receiver>
-
 
         <activity
             android:name=".MainActivity"

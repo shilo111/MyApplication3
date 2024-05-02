@@ -48,6 +48,9 @@ import com.example.myapplication.SharedViewModelStepsFire;
 import com.example.myapplication.UserPersonalManager;
 import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentHomeBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -65,20 +68,13 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HomeFragment extends Fragment implements SensorEventListener {
-
-
     private TextView stepCountTextView;
-
-
-    private int goal;
-
-
-    private DatabaseReference myRef, myRef2 ,myRef3;
+    private DatabaseReference myRef3, myRef;
     private FirebaseDatabase database;
     private FireBaseHandler fireBaseHandler;
     private FirebaseAuth auth;
 
-    private int weight;
+
     private FragmentHomeBinding binding;
     private TextView caloriesT;
     private TextView GoalT;
@@ -89,8 +85,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     private int stepsCount = 0;
     private int stepsCount2 = 0;
-    private int stepsFireBase;
-    private boolean FirstRunOfDay = false;
     private boolean isCounting = false;
     private String currentDate ="";
     private static final double AVERAGE_STEP_LENGTH = 0.7; // meters
@@ -107,7 +101,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private DayChecker dayChecker;
     private static final String TAG = "YourFragment";
     private NetworkChangeReceiver receiver;
-    private boolean fetchedFromFirebase = false;
+
     private DayChangeReceiver dayChangeReceiver;
     private SharedViewModelStepsFire viewModel;
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -121,8 +115,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("users");
-        myRef2 = database.getReference("dataUser");
+
+
         myRef3 = database.getReference("FirstRunOfDay");
         auth = FirebaseAuth.getInstance();
         fireBaseHandler = new FireBaseHandler(auth, root.getContext());
@@ -132,7 +126,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         DISTfANCE = root.findViewById(R.id.DISTfANCE);
 //        DinerT = root.findViewById(R.id.DinerT);
         strideLength = 0.415 * (userHeightCm / 100);
-        myRef3 = database.getReference("dataSteps");
+        myRef = database.getReference("dataSteps");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModelStepsFire.class);
         dayChecker = new DayChecker(getContext());
@@ -163,24 +157,18 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             } else {
                 MySharedPreferencesSteps.saveUserData(getContext(), userId, formattedDate, 0);
             }
-//
-//            // Check if the day has changed
-//            if (dayChecker.hasDayChanged()) {
-//                // Do something when the day changes
-//                Log.e(TAG, "day changed");
-////            MySharedPreferencesSteps.saveUserData(getContext(), email, formattedDate, stepsCount);
-//
-////            MySharedPreferences.saveBoolean(getContext(), true);
-//
-//            }
+
+            // Check if the day has changed
+            if (dayChecker.hasDayChanged()) {
+                // Do something when the day changes
+                Log.e(TAG, "day changed");
+              MySharedPreferencesSteps.saveUserData(getContext(), email, formattedDate, stepsCount);
+
+             MySharedPreferences.saveBoolean(getContext(), true);
+
+            }
 
         }
-
-
-
-
-
-
 
         try {
             showHomePageDesign(root);
@@ -189,37 +177,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         } catch (java.lang.InstantiationException e) {
             throw new RuntimeException(e);
         }
-
-
-
-
-
-        myRef2.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                PersonalData value = dataSnapshot.getValue(PersonalData.class);
-                if (value != null) {
-                    weight = value.getWeight();
-//                    userHeightCm = value.getHeight();
-//                    strideLength = 0.415 * (userHeightCm / 100);
-
-                } else {
-
-
-                }
-            }
-
-            @SuppressLint("RestrictedApi")
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-
-
-
 
         stepCountTextView = root.findViewById(R.id.stepCountTextView1);
 
@@ -232,7 +189,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 startCounting();
             }
         }
-
+        myRef.child(auth.getCurrentUser().getUid()).child(formattedDate).setValue(stepsCount);
 
         return root;
 
@@ -347,6 +304,15 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
                     stepCountTextView.setText(String.valueOf(stepsCount));
                 }
+                // Check if the day has changed
+                if (dayChecker.hasDayChanged()) {
+                    // Do something when the day changes
+                    Log.e(TAG, "day changed33");
+                    MySharedPreferencesSteps.saveUserData(getContext(), email, formattedDate, stepsCount);
+                    Log.e(TAG, "savedValue22: " + stepsCount);
+                    MySharedPreferences.saveBoolean(getContext(), true);
+
+                }
             } else {
                 stepCountTextView.setText("no data");
             }
@@ -357,7 +323,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         double caloriesBurned = calculateCaloriesBurned(stepsCount); // Calculate calories burned during walking
         String formattedCaloriesBurned = String.format("%.2f", caloriesBurned);
         Burn.setText(formattedCaloriesBurned);
-
+        //FireBaseHandler.stepsDate(formattedDate,stepsCount);
+        myRef.child(auth.getCurrentUser().getUid()).child(formattedDate).setValue(stepsCount);
 
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 //        currentDate = dateFormat.format(new Date());
@@ -368,7 +335,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
         if (switchState == true) {
             Log.d(TAG, "step count: " + stepsCount);
-            showNotification(stepsCount, goal);
+            showNotification(stepsCount, stepGoal);
 
         } else {
             Log.d("YourFragment", "OtherFragment not found");
