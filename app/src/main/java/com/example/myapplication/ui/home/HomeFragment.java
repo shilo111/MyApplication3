@@ -3,7 +3,6 @@ package com.example.myapplication.ui.home;
 
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -31,38 +30,25 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
 
 import com.example.myapplication.DayChangeReceiver;
 import com.example.myapplication.DayChecker;
 import com.example.myapplication.FireBaseHandler;
-import com.example.myapplication.FirstRunOfDay2;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.MySharedPreferences;
 import com.example.myapplication.MySharedPreferencesINT;
 import com.example.myapplication.MySharedPreferencesSteps;
 import com.example.myapplication.NetworkChangeReceiver;
-import com.example.myapplication.PersonalData;
 import com.example.myapplication.R;
 import com.example.myapplication.SharedViewModelStepsFire;
 import com.example.myapplication.UserPersonalManager;
-import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentHomeBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;

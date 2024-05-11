@@ -44,6 +44,7 @@ public class status extends Fragment {
     private FragmentStatusBinding binding;
     private TextView emailTextView;
     private SharedViewModelStepsFire viewModel;
+    Button button, Reviews, Account, PersonalIN, Notification, Finger;
 
     public static status newInstance() {
         return new status();
@@ -74,12 +75,12 @@ public class status extends Fragment {
         }
 
 
-         Button button = root.findViewById(R.id.LogOut);
-         Button Reviews = root.findViewById(R.id.button);
-         Button Account = root.findViewById(R.id.button2);
-         Button PersonalIN = root.findViewById(R.id.button3);
-         Button Notification = root.findViewById(R.id.button4);
-         Button Finger = root.findViewById(R.id.button5);
+          button = root.findViewById(R.id.LogOut);
+          Reviews = root.findViewById(R.id.button);
+          Account = root.findViewById(R.id.button2);
+          PersonalIN = root.findViewById(R.id.button3);
+          Notification = root.findViewById(R.id.button4);
+          Finger = root.findViewById(R.id.button5);
         int value = viewModel.getValue();
 
         Date currentDate = new Date();
