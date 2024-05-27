@@ -37,7 +37,7 @@ public class SetCalories extends AppCompatActivity {
         Setgoal = findViewById(R.id.Setgoal);
 textViewTotalCalories = findViewById(R.id.textViewTotalCalories);
 
-        // Initialize UserPersonalManager with the appropriate context and user identifier
+        // Initialize UserPersonalManager with the appropriate context and user identifier dddd
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         userPersonalManager = new UserPersonalManager(this, userId);
 
