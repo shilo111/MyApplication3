@@ -26,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 public class FireBaseHandler {
     private static FirebaseDatabase database =  FirebaseDatabase.getInstance();
     private static DatabaseReference myRef = database.getReference("dataSteps");
-
+    private static DatabaseReference myRef2 = database.getReference();
     private static FirebaseAuth auth;
     private static Context context;
 
@@ -206,14 +206,14 @@ public class FireBaseHandler {
         context.startActivity(intent);
 
     }
+    public static void SaveStepGoal(int step)
+    {
+        myRef2.child("users").child(auth.getCurrentUser().getUid()).child("GoalStep").setValue(step).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
 
-//    public static void dayStepsSensor(int dayStepsSensor)
-//    {
-//        myRef.child("dayStepsSensor").child("check").setValue(FirstRunOfDay).addOnCanceledListener(new OnCanceledListener() {
-//            @Override
-//            public void onCanceled() {
-//
-//            }
-//        });
-//    }
+            }
+        });
+    }
+
 }

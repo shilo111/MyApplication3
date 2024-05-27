@@ -44,35 +44,8 @@
         <!-- Notification Settings -->
 
         <!-- Language and Region Settings -->
-        <CheckBox
-            android:id="@+id/notification_settings_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/update_password_button"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="24dp"
-            android:text="Enable Notifications" />
-
-        <Spinner
-            android:id="@+id/language_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/notification_settings_checkbox"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="16dp"
-            android:hint="Select Language" />
 
         <!-- Terms of Service and Privacy Policy -->
-
-        <Button
-            android:id="@+id/apply_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/language_spinner"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="17dp"
-            android:layout_marginEnd="164dp"
-            android:text="Apply" />
 
         <TextView
             android:id="@+id/privacy_policy_textview"
@@ -90,7 +63,7 @@
             android:id="@+id/terms_of_service_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/language_spinner"
+
             android:layout_marginTop="236dp"
             android:gravity="center"
             android:text="Terms of Service"

@@ -89,13 +89,13 @@ public class Notification extends Fragment {
         auth = FirebaseAuth.getInstance();
 
         // Initialize notification sound spinner
-        Spinner notificationSoundSpinner = root.findViewById(R.id.notificationSoundSpinner);
+
 
         // Set up the Spinner adapter
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.notification_sounds_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        notificationSoundSpinner.setAdapter(adapter);
+
 
         // Initialize notification switch and set its state based on saved preferences
         notificationSwitch = root.findViewById(R.id.notificationSwitch);
