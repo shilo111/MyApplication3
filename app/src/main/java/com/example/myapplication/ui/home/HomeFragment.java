@@ -38,6 +38,7 @@ import com.example.myapplication.MySharedPreferencesINT;
 import com.example.myapplication.MySharedPreferencesSteps;
 import com.example.myapplication.NetworkChangeReceiver;
 import com.example.myapplication.PersonalData;
+import com.example.myapplication.DayChecker;
 import com.example.myapplication.R;
 import com.example.myapplication.SharedViewModelStepsFire;
 import com.example.myapplication.Users;
@@ -96,6 +97,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     // Network state change receiver
     private NetworkChangeReceiver receiver;
+    private int stepsCount2 = 0;
 
     // Date format for tracking steps per day
     private String currentDate = "";
@@ -147,23 +149,23 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         currentDate = dateFormat.format(new Date());
         myRef3 = database.getReference("dataSteps");
-        myRef3.child(auth.getCurrentUser().getUid()).child(currentDate).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Long steps = dataSnapshot.getValue(Long.class);
-                if (steps != null) {
-                    stepCountTextView.setText(String.valueOf(steps));
-                } else {
-                    stepCountTextView.setText("No data");
-                }
-            }
+//        myRef3.child(auth.getCurrentUser().getUid()).child(currentDate).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Long steps = dataSnapshot.getValue(Long.class);
+//                if (steps != null) {
+//                    stepCountTextView.setText(String.valueOf(steps));
+//                } else {
+//                    stepCountTextView.setText("No data");
+//                }
+//            }
 
-            @SuppressLint("RestrictedApi")
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
+//            @SuppressLint("RestrictedApi")
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                Log.w(TAG, "Failed to read value.", error.toException());
+//            }
+//        });
 
         myRef2.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -303,6 +305,68 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             Log.d(TAG, "step count: " + stepsCount);
             showNotification(stepsCount, goal);
         }
+
+
+        Date currentDate4 = new Date();
+
+// Define a date formatter for the desired format
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+// Format the current date using the formatter
+        String formattedDate = formatter.format(currentDate4);
+
+
+        boolean savedBooleanValue = MySharedPreferences.getBoolean(getContext());
+        Log.e(TAG, "savedBooleanValue before if: " + savedBooleanValue);
+        if (savedBooleanValue) {
+            stepsCount2 = (int) event.values[0];
+            MySharedPreferencesINT.saveInteger(getContext(), stepsCount2);
+            MySharedPreferences.saveBoolean(getContext(), false);
+            savedBooleanValue = MySharedPreferences.getBoolean(getContext());
+            Log.e(TAG, "savedBooleanValue after if: " + savedBooleanValue);
+            Log.e(TAG, "stepsCount2: " + stepsCount2);
+        }
+        Log.e(TAG, "stepsCount: " + (int) event.values[0]);
+        int savedIntegerValue = MySharedPreferencesINT.getInteger(getContext());
+        Log.e(TAG, "stepsCount2: " + savedIntegerValue);
+        FirebaseUser user2 = FirebaseAuth.getInstance().getCurrentUser();
+        if (user2 != null) {
+            String email = user2.getEmail();
+            String userId = email;
+            Map<String, Integer> userData = MySharedPreferencesSteps.getUserDataForDate(getContext(), userId,formattedDate);
+            if (userData != null) {
+                // Iterate over the dates and values for the user
+                for (Map.Entry<String, Integer> entry : userData.entrySet()) {
+                    String savedDate = entry.getKey();
+                    int savedValue = entry.getValue();
+                    Log.e(TAG, "savedDate: " + savedDate);
+                    Log.e(TAG, "savedValue: " + savedValue);
+                    if((int) event.values[0] - savedIntegerValue < 0)
+                    {
+                        MySharedPreferencesINT.saveInteger(getContext(), 0);
+                    }
+                    stepsCount = ((int) event.values[0] - savedIntegerValue + savedValue);
+                    viewModel.setValue(stepsCount);
+
+                    stepCountTextView.setText(String.valueOf(stepsCount));
+                }
+                // Check if the day has changed
+//                if (DayChecker.hasDayChanged()) {
+//                    // Do something when the day changes
+//                    Log.e(TAG, "day changed33");
+//                    MySharedPreferencesSteps.saveUserData(getContext(), email, formattedDate, stepsCount);
+//                    Log.e(TAG, "savedValue22: " + stepsCount);
+//                    MySharedPreferences.saveBoolean(getContext(), true);
+//
+//                }
+//            } else {
+//                stepCountTextView.setText("no data");
+           }
+        }
+
+
+
+
 
         double distance = stepsCount * strideLength;
         DISTfANCE.setText(String.format(Locale.getDefault(), "%.2f km", distance / 1000));

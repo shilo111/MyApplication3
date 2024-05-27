@@ -61,21 +61,7 @@ public class Setting extends Fragment {
         currentPasswordEditText = root.findViewById(R.id.current_password_edittext);
         newPasswordEditText = root.findViewById(R.id.new_password_edittext);
 
-        languageSpinner = root.findViewById(R.id.language_spinner);
-        applyButton = root.findViewById(R.id.apply_button);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.languages_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        languageSpinner.setAdapter(adapter);
-
-        applyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String selectedLanguage = languageSpinner.getSelectedItem().toString();
-                //changeLanguage(selectedLanguage);
-            }
-        });
 
         // Find views and set up UI listeners
         // e.g., EditText fields for current password and new password,
@@ -92,21 +78,6 @@ public class Setting extends Fragment {
     }
 
 
-    private void changeLanguage(String selectedLanguage) {
-        Locale locale = new Locale(selectedLanguage);
-        Locale.setDefault(locale);
-        Resources resources = getResources();
-        Configuration config = resources.getConfiguration();
-        DisplayMetrics dm = resources.getDisplayMetrics();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            config.setLocale(locale);
-        } else {
-            config.locale = locale;
-        }
-        resources.updateConfiguration(config, dm);
-        getActivity().recreate();
-
-    }
 
 
     private void updatePassword() {

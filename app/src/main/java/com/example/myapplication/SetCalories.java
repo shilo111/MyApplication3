@@ -49,6 +49,7 @@ textViewTotalCalories = findViewById(R.id.textViewTotalCalories);
 
 
                 if (!Setgoal.getText().toString().isEmpty()) {
+                    FireBaseHandler.SaveStepGoal(foodItem);
                     userPersonalManager.setGoalStep(foodItem);
                     Toast.makeText(SetCalories.this, "Well done!!!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SetCalories.this, HomePage.class);
