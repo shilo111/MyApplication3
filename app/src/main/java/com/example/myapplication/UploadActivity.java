@@ -135,6 +135,7 @@ public class UploadActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (imageUri != null){
                     uploadToSharedPreferences(imageUri);
+                    uploadToFirebase(imageUri);
                 } else  {
                     Toast.makeText(UploadActivity.this, "Please select image", Toast.LENGTH_SHORT).show();
                 }
@@ -181,8 +182,7 @@ public class UploadActivity extends AppCompatActivity {
 
             // Display success message or perform further actions
             Toast.makeText(UploadActivity.this, "Uploaded to SharedPreferences", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(UploadActivity.this, HomePage.class);
-            startActivity(intent);
+
             // Redirect to another activity or perform necessary actions
         } catch (JSONException e) {
             e.printStackTrace();
@@ -205,45 +205,45 @@ public class UploadActivity extends AppCompatActivity {
 
 
 
-    //    private void uploadToFirebase(Uri uri){
-//
-//        String caption = uploadCaption.getText().toString();
-//        final StorageReference imageReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
-//        imageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                    @Override
-//                    public void onSuccess(Uri uri) {
-//                        DataClass dataClass = new DataClass(uri.toString(), caption);
-//                        String key = databaseReference.push().getKey();
-//                        databaseReference.child(key).setValue(dataClass);
-//                        progressBar.setVisibility(View.INVISIBLE);
-//                        Toast.makeText(UploadActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(UploadActivity.this, UploadActivity.class);
-//                        startActivity(intent);
-//                        finish();
-//                    }
-//                });
-//            }
-//        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-//                progressBar.setVisibility(View.VISIBLE);
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                progressBar.setVisibility(View.INVISIBLE);
-//                Toast.makeText(UploadActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//    private String getFileExtension(Uri fileUri){
-//        ContentResolver contentResolver = getContentResolver();
-//        MimeTypeMap mime = MimeTypeMap.getSingleton();
-//        return mime.getExtensionFromMimeType(contentResolver.getType(fileUri));
-//    }
+        private void uploadToFirebase(Uri uri){
+
+        String caption = uploadCaption.getText().toString();
+        final StorageReference imageReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
+        imageReference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                imageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        DataClass dataClass = new DataClass(uri.toString(), caption);
+                        String key = databaseReference.push().getKey();
+                        databaseReference.child(key).setValue(dataClass);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        Toast.makeText(UploadActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(UploadActivity.this, UploadActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(UploadActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private String getFileExtension(Uri fileUri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(contentResolver.getType(fileUri));
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
