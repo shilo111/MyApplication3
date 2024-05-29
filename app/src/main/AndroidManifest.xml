@@ -37,20 +37,13 @@
         <activity
             android:name=".PathActivity"
             android:exported="false" />
-        <activity
-            android:name=".Mainscreen"
-            android:exported="false" />
+
         <activity
             android:name=".MainSlider"
             android:exported="false" />
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
 
-        <service
-            android:name=".StepCountForegroundService"
-            android:enabled="true"
-            android:exported="false" />
+
+
 
         <activity
             android:name=".UploadActivity"
