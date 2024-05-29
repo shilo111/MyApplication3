@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.myapplication.DataClass; // Custom data class
 import com.example.myapplication.MyAdapter; // Custom adapter for RecyclerView
@@ -48,6 +49,7 @@ public class Reviews extends Fragment {
     private RecyclerView recyclerView; // RecyclerView to display list of reviews
     private ArrayList<DataClass> dataList; // List to store review data
     private MyAdapter adapter; // Adapter for the RecyclerView
+    private TextView textView20;
 
     public static Reviews newInstance() {
         return new Reviews(); // Method to create a new instance of this fragment

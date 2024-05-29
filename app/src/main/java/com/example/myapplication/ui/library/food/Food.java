@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient; // Used for webview settings and handling JavaScript
 import android.webkit.WebView; // Used for displaying web content
+import android.widget.TextView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.databinding.FragmentFoodBinding;
@@ -27,6 +28,7 @@ public class Food extends Fragment {
 
     private FoodViewModel mViewModel; // ViewModel for this fragment
     private FragmentFoodBinding binding; // View binding for this fragment
+    private TextView textView20;
 
     public static Food newInstance() {
         return new Food(); // Method to create a new instance of this fragment

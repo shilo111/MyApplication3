@@ -58,6 +58,7 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback, L
     private long timeElapsed = 0; // Keeps track of elapsed time
     private static final long TIMER_INTERVAL = 1000; // 1 second timer interval
     private static final long TRACKING_DURATION = 99999; // Duration of tracking
+    private TextView textView20;
 
     @Nullable
     @Override

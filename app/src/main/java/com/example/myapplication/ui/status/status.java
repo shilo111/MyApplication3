@@ -38,6 +38,7 @@ import java.util.Locale; // Used for setting locale for date formatting
 
 public class status extends Fragment {
 
+    private TextView textView20;
     private StatusViewModel mViewModel; // ViewModel for this fragment
     private FragmentStatusBinding binding; // View binding for this fragment
     private TextView emailTextView; // TextView to display the user's email

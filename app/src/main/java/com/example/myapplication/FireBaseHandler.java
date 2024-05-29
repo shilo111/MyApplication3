@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase; // Firebase Realtime Datab
 import com.google.firebase.database.ValueEventListener;
 
 public class FireBaseHandler {
+    private TextView textView20;
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Initialize FirebaseDatabase instance
     private static DatabaseReference myRef = database.getReference("dataSteps"); // Reference to the "dataSteps" node
     private static DatabaseReference myRef2 = database.getReference(); // General database reference
