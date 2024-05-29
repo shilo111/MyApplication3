@@ -49,7 +49,7 @@ textViewTotalCalories = findViewById(R.id.textViewTotalCalories);
 
 
                 if (!Setgoal.getText().toString().isEmpty()) {
-                    FireBaseHandler.SaveStepGoal(foodItem);
+                    FireBaseHandler.saveStepGoal(foodItem);
                     userPersonalManager.setGoalStep(foodItem);
                     Toast.makeText(SetCalories.this, "Well done!!!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(SetCalories.this, HomePage.class);
@@ -76,6 +76,7 @@ textViewTotalCalories = findViewById(R.id.textViewTotalCalories);
                 int calories = Integer.parseInt(caloriesStr);
                 totalCalories = userPersonalManager.getCalories();
                 totalCalories += calories;
+                FireBaseHandler.saveClories(totalCalories);
                 userPersonalManager.setCalories(totalCalories);
                 textViewTotalCalories.setText("Total calories: " + userPersonalManager.getCalories());
                 // Clear the input fields
