@@ -206,9 +206,18 @@ public class FireBaseHandler {
         context.startActivity(intent);
 
     }
-    public static void SaveStepGoal(int step)
+    public static void saveStepGoal(int step)
     {
         myRef2.child("users").child(auth.getCurrentUser().getUid()).child("GoalStep").setValue(step).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+            }
+        });
+    }
+    public static void saveClories(int calories)
+    {
+        myRef2.child("users").child(auth.getCurrentUser().getUid()).child("calories").setValue(calories).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 

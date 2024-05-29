@@ -41,6 +41,7 @@ import com.example.myapplication.PersonalData;
 import com.example.myapplication.DayChecker;
 import com.example.myapplication.R;
 import com.example.myapplication.SharedViewModelStepsFire;
+import com.example.myapplication.UserPersonalManager;
 import com.example.myapplication.Users;
 import com.example.myapplication.databinding.FragmentHomeBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,7 +80,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private int stepsCount = 0;
     private boolean isCounting = false;
     private int goal; // User's step count goal
-    private double strideLength; // Stride length in meters
+    private double strideLength = 0.75; // Stride length in meters
     private static final double AVERAGE_STEP_LENGTH = 0.7; // meters
     private static final double AVERAGE_WALKING_SPEED_KM_PER_HOUR = 5.0; // km/h
 
@@ -145,6 +146,24 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 MySharedPreferencesSteps.saveUserData(getContext(), userId, formattedDate, 0);
             }
         }
+
+//
+//        //                 Check if the day has changed
+//        String email3 = user.getEmail();
+//                if (DayChecker.hasDayChanged()) {
+//                    // Do something when the day changes
+//                    Log.e(TAG, "day changed33");
+//                    MySharedPreferencesSteps.saveUserData(getContext(), email3, formattedDate, stepsCount);
+//                    Log.e(TAG, "savedValue22: " + stepsCount);
+//                    MySharedPreferences.saveBoolean(getContext(), true);
+//
+//                }
+//             else {
+//                    stepCountTextView.setText("no data");
+//                }
+
+
+
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         currentDate = dateFormat.format(new Date());
@@ -255,19 +274,21 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         }
     }
 
-    // Calculate walking duration based on step count
     private double calculateWalkingDuration(int stepsCount) {
-        double distanceMeters = stepsCount * AVERAGE_STEP_LENGTH;
-        double walkingSpeedMetersPerMinute = AVERAGE_WALKING_SPEED_KM_PER_HOUR * 1000 / 60;
-        return distanceMeters / walkingSpeedMetersPerMinute;
+        // Implementation of walking duration calculation method
+        double distanceMeters = stepsCount * 0.7; // Assuming average step length of 0.7 meters
+        double walkingSpeedMetersPerMinute = 5000.0 * 1000 / 60; // Assuming average walking speed of 5 km/h
+        return distanceMeters / walkingSpeedMetersPerMinute; // Walking duration in minutes
     }
 
-    // Calculate calories burned based on step count
     private double calculateCaloriesBurned(int stepsCount) {
+        // Implementation of calories burned calculation method
+        String userId3 = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        UserPersonalManager userPersonalManager = new UserPersonalManager(getContext(), userId3);
         double walkingDurationMinutes = calculateWalkingDuration(stepsCount);
-        double weightKg = weight;
-        double MET_WALKING = 3.5;
-        return 1000 * (MET_WALKING * weightKg * walkingDurationMinutes / 60.0);
+        double weightKg = userPersonalManager.getWeight();
+        double MET_WALKING = 3.5; // MET value for walking
+        return 1000*(MET_WALKING * weightKg * walkingDurationMinutes / 60.0); // Calories burned during walking
     }
 
     // Show notification if step count goal is reached
@@ -293,9 +314,6 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         stepsCount = (int) event.values[0];
         stepCountTextView.setText(String.valueOf(stepsCount));
 
-        double caloriesBurned = calculateCaloriesBurned(stepsCount);
-        String formattedCaloriesBurned = String.format("%.2f", caloriesBurned);
-        Burn.setText(formattedCaloriesBurned);
 
         SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         boolean switchState = sharedPreferences.getBoolean("notification_switch_state", false);
@@ -350,7 +368,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
                     stepCountTextView.setText(String.valueOf(stepsCount));
                 }
-                // Check if the day has changed
+//                 Check if the day has changed
+
 //                if (DayChecker.hasDayChanged()) {
 //                    // Do something when the day changes
 //                    Log.e(TAG, "day changed33");
@@ -359,14 +378,19 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 //                    MySharedPreferences.saveBoolean(getContext(), true);
 //
 //                }
-//            } else {
-//                stepCountTextView.setText("no data");
+//             else {
+//                    stepCountTextView.setText("no data");
+//                }
            }
         }
 
 
 
 
+
+        double caloriesBurned = calculateCaloriesBurned(stepsCount);
+        String formattedCaloriesBurned = String.format("%.2f", caloriesBurned);
+        Burn.setText(formattedCaloriesBurned);
 
         double distance = stepsCount * strideLength;
         DISTfANCE.setText(String.format(Locale.getDefault(), "%.2f km", distance / 1000));
