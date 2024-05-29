@@ -88,13 +88,6 @@ public class Notification extends Fragment {
         myRef2 = database.getReference("dataSteps");
         auth = FirebaseAuth.getInstance();
 
-        // Initialize notification sound spinner
-
-
-        // Set up the Spinner adapter
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.notification_sounds_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 
         // Initialize notification switch and set its state based on saved preferences

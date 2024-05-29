@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +49,17 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback, L
     private float totalDistance = 0f;
     private Chronometer chronometer;
     private TextView elapsedTimeTextView;
-    private CountDownTimer countDownTimer;
     private boolean isTracking = false;
+    private long timeWhenStopped = 0;
+
+    private CountDownTimer countDownTimer;
+
     private long elapsedRealtimeOffset = 0;
     private long timeElapsed = 0;
     private static final long TIMER_INTERVAL = 1000; // 1 second
-    private static final long TRACKING_DURATION = 60000; // 1 minute
+    private static final long TRACKING_DURATION = 99999; // 1 minute
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,42 +73,22 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback, L
         Button stopButton = root.findViewById(R.id.stopButton);
         chronometer = root.findViewById(R.id.chronometer);
         elapsedTimeTextView = root.findViewById(R.id.elapsedTimeTextView);
-        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                updateElapsedTime();
-            }
-        });
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startTracking();
-
-
             }
         });
 
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "good job see your stats on the button below!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Good job! See your stats on the button below!!", Toast.LENGTH_SHORT).show();
                 stopTracking();
             }
         });
 
-        // Button to navigate to PathActivity
-        Button viewPathButton = root.findViewById(R.id.viewPathButton);
-        viewPathButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), PathActivity.class);
-                // Pass path data and elapsed time to PathActivity
-                intent.putExtra("pathPoints", pathPoints.toArray(new LatLng[0]));
-                intent.putExtra("elapsedTime", timeElapsed);
-                startActivity(intent);
-            }
-        });
 
         return root;
     }
@@ -111,22 +96,23 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback, L
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong("elapsedRealtimeOffset", elapsedRealtimeOffset);
+        outState.putLong("timeWhenStopped", timeWhenStopped);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            elapsedRealtimeOffset = savedInstanceState.getLong("elapsedRealtimeOffset");
+            timeWhenStopped = savedInstanceState.getLong("timeWhenStopped");
         }
     }
+
     @SuppressLint("DefaultLocale")
     private void updateElapsedTime() {
         long elapsedMillis = SystemClock.elapsedRealtime() - chronometer.getBase();
         int hours = (int) (elapsedMillis / 3600000);
-        int minutes = (int) (elapsedMillis - hours * 3600000) / 60000;
-        int seconds = (int) (elapsedMillis - hours * 3600000 - minutes * 60000) / 1000;
+        int minutes = (int) (elapsedMillis % 3600000) / 60000;
+        int seconds = (int) (elapsedMillis % 60000) / 1000;
         elapsedTimeTextView.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
     }
 
@@ -182,7 +168,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback, L
         }
     }
 
-
     private void startTracking() {
         pathPoints.clear();
         totalDistance = 0f;
@@ -213,6 +198,14 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback, L
         }
     }
 
+    private void updateTimer(long elapsedTime) {
+        long hours = elapsedTime / 3600000;
+        long minutes = (elapsedTime % 3600000) / 60000;
+        long seconds = (elapsedTime % 60000) / 1000;
+        elapsedTimeTextView.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+    }
+
+
     private void stopTracking() {
         if (locationManager != null) {
             locationManager.removeUpdates(this);
@@ -231,11 +224,6 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback, L
         intent.putExtra("pathPoints", pathPoints.toArray(new LatLng[0]));
         intent.putExtra("elapsedTime", timeElapsed);
 
-    }
-    private void updateTimer(long elapsedTime) {
-        long minutes = elapsedTime / 60000;
-        long seconds = (elapsedTime % 60000) / 1000;
-        elapsedTimeTextView.setText(String.format("%02d:%02d", minutes, seconds));
     }
 
     @Override
@@ -262,5 +250,30 @@ public class DashboardFragment extends Fragment implements OnMapReadyCallback, L
 
     // Other methods of LocationListener (onStatusChanged, onProviderEnabled, onProviderDisabled) can be implemented if needed
 
-    // Ensure to add onDestroy, onPause, onResume, and onLowMemory methods as you had in your original code
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+        if (locationManager != null) {
+            locationManager.removeUpdates(this);
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
 }

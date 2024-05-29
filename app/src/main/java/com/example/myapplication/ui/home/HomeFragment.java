@@ -2,6 +2,7 @@ package com.example.myapplication.ui.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +32,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.myapplication.DayChangeReceiver;
 import com.example.myapplication.FireBaseHandler;
 import com.example.myapplication.MainActivity;
 import com.example.myapplication.MySharedPreferences;
@@ -38,7 +39,6 @@ import com.example.myapplication.MySharedPreferencesINT;
 import com.example.myapplication.MySharedPreferencesSteps;
 import com.example.myapplication.NetworkChangeReceiver;
 import com.example.myapplication.PersonalData;
-import com.example.myapplication.DayChecker;
 import com.example.myapplication.R;
 import com.example.myapplication.SharedViewModelStepsFire;
 import com.example.myapplication.UserPersonalManager;
@@ -53,6 +53,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -85,8 +86,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private static final double AVERAGE_WALKING_SPEED_KM_PER_HOUR = 5.0; // km/h
 
     // Constants
-    private static final int NOTIFICATION_ID = 123;
-    private static final String CHANNEL_ID = "StepCounterChannel";
+    private static final String CHANNEL_ID = "step_goal_channel";
+    private static final int NOTIFICATION_ID = 1;
 
     // User data
     private int weight;
@@ -108,6 +109,13 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     // ViewModel for shared steps
     private SharedViewModelStepsFire viewModel;
+    private SharedPreferences sharedPreferences;
+
+    private static final String PREF_NAME = "DayCheckerPrefs";
+    private static final String LAST_CHECKED_DAY_KEY = "lastCheckedDay";
+
+    public HomeFragment() {
+    }
 
     // Initialize the fragment's view
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -119,6 +127,9 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
         // Initialize Firebase
         initializeFirebase();
+
+        // Initialize shared preferences
+        sharedPreferences = requireContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
         // Start counting steps
         startCounting();
@@ -147,44 +158,21 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             }
         }
 
-//
-//        //                 Check if the day has changed
-//        String email3 = user.getEmail();
-//                if (DayChecker.hasDayChanged()) {
-//                    // Do something when the day changes
-//                    Log.e(TAG, "day changed33");
-//                    MySharedPreferencesSteps.saveUserData(getContext(), email3, formattedDate, stepsCount);
-//                    Log.e(TAG, "savedValue22: " + stepsCount);
-//                    MySharedPreferences.saveBoolean(getContext(), true);
-//
-//                }
-//             else {
-//                    stepCountTextView.setText("no data");
-//                }
-
-
-
+        // Check if the day has changed
+        String email3 = user.getEmail();
+        if (hasDayChanged()) {
+            // Do something when the day changes
+            Log.e(TAG, "day changed33");
+            MySharedPreferencesSteps.saveUserData(getContext(), email3, formattedDate, stepsCount);
+            Log.e(TAG, "savedValue22: " + stepsCount);
+            MySharedPreferences.saveBoolean(getContext(), true);
+        } else {
+            stepCountTextView.setText("no data");
+        }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         currentDate = dateFormat.format(new Date());
         myRef3 = database.getReference("dataSteps");
-//        myRef3.child(auth.getCurrentUser().getUid()).child(currentDate).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Long steps = dataSnapshot.getValue(Long.class);
-//                if (steps != null) {
-//                    stepCountTextView.setText(String.valueOf(steps));
-//                } else {
-//                    stepCountTextView.setText("No data");
-//                }
-//            }
-
-//            @SuppressLint("RestrictedApi")
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                Log.w(TAG, "Failed to read value.", error.toException());
-//            }
-//        });
 
         myRef2.child(auth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -288,25 +276,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         double walkingDurationMinutes = calculateWalkingDuration(stepsCount);
         double weightKg = userPersonalManager.getWeight();
         double MET_WALKING = 3.5; // MET value for walking
-        return 1000*(MET_WALKING * weightKg * walkingDurationMinutes / 60.0); // Calories burned during walking
-    }
-
-    // Show notification if step count goal is reached
-    private void showNotification(int stepsCount, int goal) {
-        if (stepsCount >= goal) {
-            Intent notificationIntent = new Intent(getContext(), MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), CHANNEL_ID)
-                    .setSmallIcon(R.drawable.notification)
-                    .setContentTitle("Step Count Goal Reached!")
-                    .setContentText("Congratulations! You've reached your step count goal.")
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true);
-            NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            if (notificationManager != null) {
-                notificationManager.notify(NOTIFICATION_ID, builder.build());
-            }
-        }
+        return 1000 * (MET_WALKING * weightKg * walkingDurationMinutes / 60.0); // Calories burned during walking
     }
 
     @Override
@@ -314,25 +284,13 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         stepsCount = (int) event.values[0];
         stepCountTextView.setText(String.valueOf(stepsCount));
 
-
         SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         boolean switchState = sharedPreferences.getBoolean("notification_switch_state", false);
-        Log.d(TAG, "Switch state: " + switchState);
-
-        if (switchState) {
-            Log.d(TAG, "step count: " + stepsCount);
-            showNotification(stepsCount, goal);
-        }
-
+        Log.d("Not", "Switch state: " + switchState);
 
         Date currentDate4 = new Date();
-
-// Define a date formatter for the desired format
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-// Format the current date using the formatter
         String formattedDate = formatter.format(currentDate4);
-
 
         boolean savedBooleanValue = MySharedPreferences.getBoolean(getContext());
         Log.e(TAG, "savedBooleanValue before if: " + savedBooleanValue);
@@ -351,7 +309,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         if (user2 != null) {
             String email = user2.getEmail();
             String userId = email;
-            Map<String, Integer> userData = MySharedPreferencesSteps.getUserDataForDate(getContext(), userId,formattedDate);
+            Map<String, Integer> userData = MySharedPreferencesSteps.getUserDataForDate(getContext(), userId, formattedDate);
             if (userData != null) {
                 // Iterate over the dates and values for the user
                 for (Map.Entry<String, Integer> entry : userData.entrySet()) {
@@ -359,8 +317,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     int savedValue = entry.getValue();
                     Log.e(TAG, "savedDate: " + savedDate);
                     Log.e(TAG, "savedValue: " + savedValue);
-                    if((int) event.values[0] - savedIntegerValue < 0)
-                    {
+                    if ((int) event.values[0] - savedIntegerValue < 0) {
                         MySharedPreferencesINT.saveInteger(getContext(), 0);
                     }
                     stepsCount = ((int) event.values[0] - savedIntegerValue + savedValue);
@@ -368,25 +325,14 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
                     stepCountTextView.setText(String.valueOf(stepsCount));
                 }
-//                 Check if the day has changed
-
-//                if (DayChecker.hasDayChanged()) {
-//                    // Do something when the day changes
-//                    Log.e(TAG, "day changed33");
-//                    MySharedPreferencesSteps.saveUserData(getContext(), email, formattedDate, stepsCount);
-//                    Log.e(TAG, "savedValue22: " + stepsCount);
-//                    MySharedPreferences.saveBoolean(getContext(), true);
-//
-//                }
-//             else {
-//                    stepCountTextView.setText("no data");
-//                }
-           }
+            }
         }
 
-
-
-
+        if (switchState) {
+            Log.d("Not", "11111111111step count: " + stepsCount);
+            Log.d("Not", "11111111111step goal: " + goal);
+            showNotification(stepsCount, goal);
+        }
 
         double caloriesBurned = calculateCaloriesBurned(stepsCount);
         String formattedCaloriesBurned = String.format("%.2f", caloriesBurned);
@@ -397,6 +343,45 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
         // Save step count to Firebase
         saveStepCountToFirebase(currentDate, stepsCount);
+    }
+
+    // Show notification if step count goal is reached
+    private void showNotification(int stepsCount, int goal) {
+        if (stepsCount >= goal) {
+            Context context = requireContext(); // or getContext()
+
+            // Create the notification channel if necessary (Android 8.0+)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(
+                        CHANNEL_ID,
+                        "Step Goal Notifications",
+                        NotificationManager.IMPORTANCE_DEFAULT
+                );
+                channel.setDescription("Notifications for step count goal achievement");
+                NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(channel);
+            }
+
+            Intent notificationIntent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    context,
+                    0,
+                    notificationIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.notification)
+                    .setContentTitle("Step Count Goal Reached!")
+                    .setContentText("Congratulations! You've reached your step count goal.")
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.notify(NOTIFICATION_ID, builder.build());
+            }
+        }
     }
 
     // Save step count to Firebase
@@ -440,4 +425,26 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             sensorManager.unregisterListener(this, stepSensor);
         }
     }
+
+    public void DayChecker(Context context) {
+        sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    public boolean hasDayChanged() {
+        Calendar calendar = Calendar.getInstance();
+        int currentDay = calendar.get(Calendar.DAY_OF_YEAR);
+
+        int lastCheckedDay = sharedPreferences.getInt(LAST_CHECKED_DAY_KEY, -1);
+
+        if (currentDay != lastCheckedDay) {
+            // Update last checked day in SharedPreferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(LAST_CHECKED_DAY_KEY, currentDay);
+            editor.apply();
+            return true; // Day has changed
+        } else {
+            return false; // Day has not changed
+        }
+    }
 }
+

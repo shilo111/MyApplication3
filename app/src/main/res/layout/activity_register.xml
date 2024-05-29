@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="232dp"
-        android:layout_height="69dp"
+        android:layout_width="223dp"
+        android:layout_height="200dp"
         android:layout_weight="1" />
 
     <TextView
@@ -39,11 +39,11 @@
 
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/regEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="email"
-            android:id="@+id/regEmail"
-            android:inputType="textWebEmailAddress"/>
+            android:inputType="textWebEmailAddress" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,24 +64,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="sign in with fingerPrint: "
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/sign_in_finger"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:onClick="signIn"
-        android:text="Sign in"
-        android:textColor="@color/blue"
-        android:textSize="15sp"
-        android:textStyle="bold" />
 
     <Button
         android:id="@+id/regsignup"

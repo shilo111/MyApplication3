@@ -36,43 +36,10 @@ public class Register extends AppCompatActivity {
 
 
 
-       TextView authenticateButton = findViewById(R.id.sign_in_finger);
-        authenticateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showBiometricPrompt();
-            }
-        });
+
+
     }
 
-    private void showBiometricPrompt() {
-        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric Authentication")
-                .setDescription("Please authenticate with your biometrics to continue")
-                .setDeviceCredentialAllowed(true)
-                .build();
-
-        BiometricPrompt biometricPrompt = new BiometricPrompt(this,
-                ContextCompat.getMainExecutor(this),
-                new BiometricPrompt.AuthenticationCallback() {
-                    @Override
-                    public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                        super.onAuthenticationSucceeded(result);
-                        Toast.makeText(getApplicationContext(), "Authentication successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Register.this, HomePage.class);
-                        startActivity(intent);
-                        finish();
-                    }
-
-                    @Override
-                    public void onAuthenticationFailed() {
-                        super.onAuthenticationFailed();
-                        Toast.makeText(getApplicationContext(), "Authentication failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        biometricPrompt.authenticate(promptInfo);
-    }
 
     public void reg(View view)
     {
